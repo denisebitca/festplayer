@@ -1,0 +1,22 @@
+{
+  "name": "randprog",
+  "version": "0.0.1",
+  "description": "Random program",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo no",
+    "start": "node randprog"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rdb-github/randprog.git"
+  },
+  "author": "RDB",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rdb-github/randprog/issues"
+  },
+  "homepage": "https://github.com/rdb-github/randprog#readme",
+  "dependencies": {
+  }
+}
