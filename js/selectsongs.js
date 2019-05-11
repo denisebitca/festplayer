@@ -2,7 +2,7 @@ function selectSong(song){
 	for(i=0;$('.songname').length>i;i++){
 		$('.song')[i].setAttribute("style", "");
 	}
-	$.get('../api/getsongs.php', function(result){
+	$.get('./api/getsongs.php', function(result){
         if (result == "NIGHT_EMPTY") {
             alert("no songs lol");
         } else {
