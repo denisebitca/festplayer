@@ -15,6 +15,7 @@ $.get('./getsongs.php', function(result){
 		  if(i == 0){
 			var audio = $('<audio></audio>').attr("src", "./songs" + "/" + result[i].file);
 			$('#footer').append(audio)
+			$('.song')[0].setAttribute("style", "filter: invert(1)");
 		  };
           var article = $("<div></div>").addClass('song');
           $('#songcontainer').append(article);
