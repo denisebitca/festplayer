@@ -7,7 +7,7 @@ $.get('./getsongs.php', function(result){
 		for(i=0;amountofarticles>i;i++){
 		var music = result[i].file
 		array.push(
-			"./songs/" + music
+			"../songs/" + music
 		);
 		}
 		console.log(array);
