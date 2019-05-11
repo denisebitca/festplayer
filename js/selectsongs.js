@@ -14,7 +14,7 @@ function selectSong(song){
 			"../songs/" + music
 		);
 		}}
-	$(".audiojs>audio")[0].src(array[song]);
+	$(".audiojs>audio")[0].src = array[song];
 	$(".audiojs>audio")[0].load;
 	$(".audiojs>audio")[0].play;
 	$('.song')[song].setAttribute("style", "filter: invert(1)");
