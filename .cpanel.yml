@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/xyz1/public_html/27cbd448b7e30e3661a25592f3db9cb8/festplayer/
+    - /bin/cp -R * $DEPLOYPATH
