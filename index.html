@@ -5,13 +5,12 @@
 	<meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">
     <title>Festplayer</title>
     <link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="https://unpkg.com/simplebar@latest/dist/simplebar.min.css">
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 	<script src="audio.min.js"></script>
-	<script>
-	audiojs.events.ready(function() {
-		var as = audiojs.createAll();
-	});
-	</script>
+	<script src="getsongs.js"></script>
+	<script src="selectsongs.js"></script>
+	<script src="https://unpkg.com/simplebar@latest/dist/simplebar.js"></script>
   </head>
   <body>
     <div id="content">
@@ -23,7 +22,7 @@
 		</div>
 		<div id="mainpage">
 			<div id="songcontainer">
-				<div class="song">
+				<!--div class="song">
 					<h1 class="songposition">1</h1>
 					<div class="songinfo">
 						<h1 class="songname">Beat It</h1>
@@ -39,7 +38,7 @@
 						<h1 class="songduration">3:57</h1>
 					</div>
 				</div>
-				<!--div class="song">
+				<div class="song">
 				</div>
 				<div class="song">
 				</div>
@@ -63,7 +62,7 @@
 				</div-->
 			</div>
 			<div id="footer">
-				<audio src="test.mp3" preload="auto" />
+				
 			</div>
 		</div>
 	</div>
