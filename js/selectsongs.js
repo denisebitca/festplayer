@@ -16,7 +16,7 @@ function selectSong(song){
 		}}
 	$(".audiojs>audio")[0].src = array[song];
 	$(".audiojs>audio")[0].load;
-	$(".audiojs>audio")[0].play;
+	$(".play")[0].click();
 	$('.song')[song].setAttribute("style", "filter: invert(1)");
 	});
 }
