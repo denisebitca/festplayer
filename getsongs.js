@@ -13,7 +13,7 @@ $.get('./getsongs.php', function(result){
 		console.log(array);
         for(i=0;amountofarticles>i;i++){
 		  if(i == 0){
-			var audio = $('<audio></audio>').attr("src", "./songs" + "/" + result[i].file);
+			var audio = $('<audio></audio>').attr("src", "../songs" + "/" + result[i].file);
 			$('#footer').append(audio)
 		  };
           var article = $("<div></div>").addClass('song');
