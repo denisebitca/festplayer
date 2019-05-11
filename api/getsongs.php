@@ -1,7 +1,7 @@
 <?php
 require_once('./getid3/getid3.php');
 header('Content-Type: application/json');
-$dir = "../songs"; 
+$dir = "../../songs"; 
 $list = array(); 
 if(is_dir($dir)){
     if($dh = opendir($dir)){
