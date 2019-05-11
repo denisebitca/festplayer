@@ -64,13 +64,56 @@ html, body {
 }
 .song{
 	width: calc(100% - 80px);
-    height: 15em;
+    height: auto;
     background-color: #333333;
 	margin-top: 20px;
 	display: flex;
+	align-items: center;
     margin: 40px
     /*-ms-transform: translateY(-50%);
     transform: translateY(50%);*/
+}
+.songname,.songposition,.songartist,.songduration {
+	font-family: Arial;
+	font-weight: bold;
+	color: white
+}
+.songposition{
+	font-size: 100px;
+    margin-left: 100px;
+    margin-right: 100px;
+}
+.songinfo{
+text-overflow: ellipsis; 
+word-break: break-all;
+padding-right: 100px;
+}
+.songinfo>h1{
+margin: 0 auto;
+}
+.songname{
+margin-top: 40px !important;
+font-size:50px;
+}
+.songartist{
+font-size:40px;
+word-break: break-word;
+}
+.songduration{
+font-size:30px;
+margin-bottom: 40px !important
+}
+@media only screen and (max-width: 700px){
+	.songposition{
+		font-size: 50px;
+		margin-left: 50px;
+		margin-right: 50px;
+	}
+	.songinfo{
+		text-overflow: ellipsis; 
+		word-break: break-all;
+		padding-right: 50px;
+	}
 }
 @media only screen and (max-width: 500px){
 	.audiojs{
