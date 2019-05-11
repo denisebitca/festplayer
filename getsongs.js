@@ -1,4 +1,4 @@
-$.get('http://192.168.1.73/getsongs.php', function(result){
+$.get('./getsongs.php', function(result){
         if (result == "NIGHT_EMPTY") {
             alert("no songs lol");
         } else {
