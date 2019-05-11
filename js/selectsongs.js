@@ -2,7 +2,7 @@ function selectSong(song){
 	for(i=0;$('.songname').length>i;i++){
 		$('.song')[i].setAttribute("style", "");
 	}
-	$.get('./getsongs.php', function(result){
+	$.get('../api/getsongs.php', function(result){
         if (result == "NIGHT_EMPTY") {
             alert("no songs lol");
         } else {
@@ -14,12 +14,9 @@ function selectSong(song){
 			"../songs/" + music
 		);
 		}}
-	$(".audiojs").remove()
-	var audio = $('<audio></audio>').attr("src", array[song]).attr("autoplay", "autoplay");
-	$('#footer').append(audio);
-	audiojs.events.ready(function() {
-		var as = audiojs.createAll();
-	});
+	$(".audiojs>audio")[0].src(array[song]);
+	$(".audiojs>audio")[0].load;
+	$(".audiojs>audio")[0].play;
 	$('.song')[song].setAttribute("style", "filter: invert(1)");
 	});
 }

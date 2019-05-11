@@ -1,4 +1,4 @@
-$.get('./getsongs.php', function(result){
+$.get('../api/getsongs.php', function(result){
         if (result == "NIGHT_EMPTY") {
             alert("no songs lol");
         } else {
