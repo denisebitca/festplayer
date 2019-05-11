@@ -1,1 +1,86 @@
- 
+html, body {
+	margin: 0 auto
+}
+#content{
+	width: 100%;
+	height: 100%;
+	position: absolute
+}
+#navbar {
+	display:flex;
+	width: 100%;
+	height: 75px;
+	flex-direction:row;
+	justify-content:flex-start;
+	background-color:#4ABDAC;
+	position: relative;
+	align-items: center
+}	
+#logo{
+	width: 100px;
+	border-right:2px solid white
+}
+#programname{
+	margin-left: 10px;
+	font-family: Arial;
+	font-weight: bold;
+	color: white;
+	font-size: 40px
+}
+#home{
+	width: 75px;
+	align-self: flex-end
+}
+#space{
+	width: calc(100% - 75px)
+}
+#mainpage{
+	width: 100%;
+	height: calc(100% - 75px);
+	position: relative;
+	display: flex;
+	justify-content: center;
+	background-color: #3c3c3c
+}
+#footer{
+	left: 0;
+    bottom: 0;
+    width: 100%;
+    position: absolute;
+    background-color: #1f1f1f;
+	display:flex;
+	justify-content: center;
+	align-items: center;
+    height: 75px
+}
+#songcontainer{
+	width: 90%;
+	height: calc(100% - 150px);
+	background-color: #353535;
+	margin-top: 35px;
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	grid-column-gap: 10px;
+	grid-row-gap: 10px;
+	grid-auto-flow: dense;
+	border-radius: 25px;
+	justify-content: center;
+	overflow: scroll
+}
+.song{
+	width: 15em;
+    height: 5em;
+    background-color: #333333;
+    margin: 40px;
+    /*-ms-transform: translateY(-50%);
+    transform: translateY(50%);*/
+}
+@media only screen and (max-width: 500px){
+	.audiojs{
+		width: 70%;
+		resize: both;
+	}
+	.scrubber{
+		display:none;
+	}
+}
