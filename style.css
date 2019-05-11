@@ -58,20 +58,17 @@ html, body {
 	height: calc(100% - 150px);
 	background-color: #353535;
 	margin-top: 35px;
-	display: grid;
-	grid-template-columns: repeat(4, 1fr);
-	grid-column-gap: 10px;
-	grid-row-gap: 10px;
-	grid-auto-flow: dense;
+	display: block;
 	border-radius: 25px;
-	justify-content: center;
-	overflow: scroll
+	overflow-y: auto
 }
 .song{
-	width: 15em;
-    height: 5em;
+	width: calc(100% - 80px);
+    height: 15em;
     background-color: #333333;
-    margin: 40px;
+	margin-top: 20px;
+	display: flex;
+    margin: 40px
     /*-ms-transform: translateY(-50%);
     transform: translateY(50%);*/
 }
