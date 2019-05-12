@@ -29,4 +29,5 @@ The website won't always run the latest version of festplayer, but more often th
 ## FAQ
 
 - Why does the website include a logo saying "Festicassin 2020"?
+
 It's the aforementioned future event.
