@@ -34,6 +34,15 @@ html, body {
 #space{
 	width: calc(100% - 75px)
 }
+#loading{
+	font-family: Arial;
+    color: white;
+    font-size: 50px;
+    text-align: center;
+    display: none;
+    padding-top: calc(20% - 20px);
+    margin: 0 auto;
+}
 #mainpage{
 	width: 100%;
 	height: calc(100% - 75px);

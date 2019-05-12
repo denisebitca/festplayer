@@ -1,5 +1,6 @@
 $.get('./api/getsongs.php', function(result){
-        if (result == "NIGHT_EMPTY") {
+	document.getElementById("loading").style.display = "block";
+		if (result == "NIGHT_EMPTY") {
             alert("no songs lol");
         } else {
         var amountofarticles = result.length;
@@ -15,6 +16,7 @@ $.get('./api/getsongs.php', function(result){
 		  if(i == 0){
 			var audio = $('<audio></audio>').attr("src", "../songs" + "/" + result[i].file);
 			$('#footer').append(audio)
+			document.getElementById("loading").style.display = "none";
 		  };
           var article = $("<div></div>").addClass('song');
           $('#songcontainer').append(article);
@@ -42,7 +44,7 @@ $.get('./api/getsongs.php', function(result){
 		  //other
 		  $(".song")[i].setAttribute("onclick", "selectSong('"+i+"')")
 		  $('.song')[0].setAttribute("style", "filter: invert(1)");
-}
+}		  
 	audiojs.events.ready(function() {
 		var as = audiojs.createAll();
 	});
