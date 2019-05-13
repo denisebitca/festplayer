@@ -1,6 +1,12 @@
 function selectSong(song){
+	if($(".song")[song].getAttribute("name") == "selected"){
+		if(audiojs.instances.audiojs0.playing == true || audiojs.instances.audiojs0.playing == false){
+			audiojs.instances.audiojs0.playPause()
+		}
+	} else {
 	for(i=0;$('.songname').length>i;i++){
-		$('.song')[i].setAttribute("style", "");
+	$('.song')[i].setAttribute("style", "");
+	$('.song')[i].setAttribute("name","");
 	}
 	$.get('./api/getsongs.php', function(result){
         if (result == "NIGHT_EMPTY") {
@@ -21,5 +27,6 @@ function selectSong(song){
 	}
 	audiojs.instances.audiojs0.playPause()
 	$('.song')[song].setAttribute("style", "filter: invert(1)");
-	});
+	$('.song')[song].setAttribute("name","selected");
+	})};
 }
