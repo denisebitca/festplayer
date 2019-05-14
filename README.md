@@ -6,7 +6,9 @@ Festplayer is an open-source web-based music player with planned remote use capa
 
 **Please be aware the project includes [getid3 v3](https://github.com/JamesHeinrich/getID3), and as such is subject to [the following licenses](https://github.com/JamesHeinrich/getID3/blob/master/license.txt).**
 
-**Please be aware the project also includes [audio.js](https://github.com/kolber/audiojs) and [SimpleBar](https://github.com/Grsmto/simplebar), both subjected to the [MIT License](https://opensource.org/licenses/MIT).**
+**Please be aware the project also includes [audio.js](https://github.com/kolber/audiojs) and [SimpleBar](https://github.com/Grsmto/simplebar), both subject to the [MIT License](https://opensource.org/licenses/MIT).**
+
+**Please be equally aware the project includes [material design icons](https://material.io/icons), which means that it is preferred, (only with the getid3 Commercial License) to not package this project with any paid software or profit from it in anyway.**
 
 ## Use
 Festplayer is weird. You must place your songs in **../songs**.
@@ -16,7 +18,7 @@ Festplayer requires an internet connection because CDNs are used.
 
 ## Screenshots
 ### *Mobile interface:*
-![Screenshot 1](https://i.imgur.com/fnudWkK.png)
+![Screenshot 1](https://i.imgur.com/H5AUl0v.png)
 ### *Computer interface:*
 ![Screenshot 2](https://i.imgur.com/GqK1AmM.png)
 
