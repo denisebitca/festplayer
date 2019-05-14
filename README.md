@@ -8,7 +8,7 @@ Festplayer is an open-source web-based music player made by [rdb-github](https:/
 
 **Please be aware the project also includes [audio.js](https://github.com/kolber/audiojs) and [SimpleBar](https://github.com/Grsmto/simplebar), both subject to the [MIT License](https://opensource.org/licenses/MIT).**
 
-**Please be equally aware the project includes [material design icons](https://material.io/icons), which means that it is preferred, (only with the getid3 Commercial License) to not package this project with any paid software or profit from it in anyway.**
+**Please be equally aware the project includes [material design icons](https://material.io/icons), which means that you may not package this project with any paid software or profit from it in anyway (even with the getid3 Commercial License).**
 
 ## Use
 Festplayer is weird. You must place your songs in **../songs**.
