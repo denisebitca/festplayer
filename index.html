@@ -6,19 +6,23 @@
     <title>Festplayer</title>
     <link rel="stylesheet" href="./css/style.css">
 	<link rel="stylesheet" href="https://unpkg.com/simplebar@latest/dist/simplebar.min.css">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 	<script src="./js/audio.min.js"></script>
-	<script src="./js/getsongs.js"></script>
-	<script src="./js/selectsongs.js"></script>
+	<script src="./js/main.js"></script>
 	<script src="https://unpkg.com/simplebar@latest/dist/simplebar.js"></script>
   </head>
   <body>
     <div id="content">
 		<div id="navbar">
-			<img id="logo" alt="logo" src="./images/festi.png">
+			<a href="/"><img id="logo" alt="logo" src="./images/festi.png"></a>
 			<h1 id="programname">festplayer</h1>
 			<div id="space"></div>
-			<a href="/"><img id="home" alt="return to home" src="./images/home.png"></a>
+			<img id="remote" alt="Iniciate remote control" src="./images/remote.svg">
+		</div>
+		<div id="remotemobile">
+			<a onclick="remotecontrol()" href="javascript:void(0)">CLICK HERE TO START REMOTE CONTROL</a>
 		</div>
 		<div id="mainpage">
 			<div id="songcontainer"><h1 id="loading">Loading...</h1></div>
