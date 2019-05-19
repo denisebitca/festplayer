@@ -20,9 +20,9 @@ function getlist(){
     $dir = "../../songs";
     $infodir = new SplFileInfo($dir);
     $lastmodif = date('d/m/Y H:i:s', $infodir->getMTime());
-    /*$files = glob($dir . "/*.mp3");
+    $files = glob($dir . "/*.mp3");
     $list = array(); 
-    $countFiles = 0;*/
+    $countFiles = 0;
     $filename = 'latestresults.json';
     if ($files){
         $countFiles = count($files);
