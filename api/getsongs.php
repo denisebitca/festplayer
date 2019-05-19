@@ -47,16 +47,10 @@ function getlist(){
 }
 
 if (file_exists($filename) && file_exists("filecount")) {
-    $datefile = date("Y-m-d H:i:s", filemtime($filename));
-    $date = strtotime($datefile);
-    if (time() - $date > 60 * 60) {
+    if($countFiles != file_get_contents("filecount")){
         getlist();
     } else {
-        if($countFiles != file_get_contents("filecount")){
-            getlist();
-        } else {
-            echo file_get_contents('latestresults.json');
-        }
+        echo file_get_contents('latestresults.json');
     }
 } else {
     getlist();
