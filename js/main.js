@@ -1,17 +1,18 @@
+var resultarray = [];
+
 $.get('./api/getsongs.php', function(result){
 	//document.getElementById("loading").style.display = "block";
 		if (result == "NIGHT_EMPTY") {
             alert("no songs lol");
         } else {
         var amountofarticles = result.length;
-		var array = [];
 		for(i=0;amountofarticles>i;i++){
 		var music = result[i].file
-		array.push(
+		resultarray.push(
 			"../songs/" + music
 		);
 		}
-		console.log(array);
+		console.log(resultarray);
         for(i=0;amountofarticles>i;i++){
 		  if(i == 0){
 			var audio = $('<audio></audio>').attr("src", "../songs" + "/" + result[i].file);
@@ -53,8 +54,11 @@ $.get('./api/getsongs.php', function(result){
 	var repeat = $('<i></i>').attr({"class":"material-icons","onclick":"repeat()","id":"repeat","name":"norepeat"});
 	repeat.text("repeat_one");
 	var slider = $('<input></input>').attr({"id":"vol-control","type":"range","min":"0","max":"100","step":"1","oninput":"setVolume(this.value)"})
+	var volume = $('<i></i>').attr({"class":"material-icons","onclick":"volume()","id":"volume","name":"sliderhide"});
+	volume.text("volume_up");
 	$('#footer').append(repeat);
 	$('#footer').append(slider);
+	$('#footer').append(volume);
 }
 });
 
@@ -71,28 +75,15 @@ function selectSong(song){
 	$('.song[name=selected]')[0].setAttribute("style", "");
 	$('.song[name=selected]')[0].setAttribute("name","");
 	document.title = "Festplayer";
-	$.get('./api/getsongs.php', function(result){
-        if (result == "NIGHT_EMPTY") {
-            alert("no songs lol");
-        } else {
-        var amountofarticles = result.length;
-		var array = [];
-		for(i=0;amountofarticles>i;i++){
-		var music = result[i].file
-		array.push(
-			"../songs/" + music
-		);
-		}}
-		document.title = result[song].file.replace(".mp3","") + " | Festplayer"
-	audiojs.instances.audiojs0.load(array[song]);
+	document.title = resultarray[song].replace("../songs/", "").replace(".mp3","") + " | Festplayer"
+	audiojs.instances.audiojs0.load(window.resultarray[song]);
 	if(audiojs.instances.audiojs0.playing = true){
 		audiojs.instances.audiojs0.playPause()
 	}
 	audiojs.instances.audiojs0.playPause()
 	$('.song')[song].setAttribute("style", "filter: invert(1)");
 	$('.song')[song].setAttribute("name","selected");
-	})};
-}
+}}
 
 function repeat(){
 	if(document.getElementById("repeat").getAttribute("name") == "norepeat"){
@@ -101,6 +92,16 @@ function repeat(){
 	} else if(document.getElementById("repeat").getAttribute("name") == "repeat-one"){
 		document.getElementById("repeat").setAttribute("name", "norepeat");
 		audiojs.instances.audiojs0.element.loop = false;
+	}
+}
+
+function volume(){
+	if(document.getElementById("volume").getAttribute("name") == "slidershow"){
+		document.getElementById("vol-control").setAttribute("style","display:none");
+		document.getElementById("volume").setAttribute("name","sliderhide")
+	} else if (document.getElementById("volume").getAttribute("name") == "sliderhide"){
+		document.getElementById("vol-control").setAttribute("style","display:block");
+		document.getElementById("volume").setAttribute("name","slidershow")
 	}
 }
 
