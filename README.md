@@ -14,8 +14,6 @@ Festplayer is an open-source web server-localised music player made by [rdb-gith
 Festplayer is weird. You must place your songs in **../songs**.
 Make sure PHP is correctly configured.
 
-Festplayer requires an internet connection because CDNs are used.
-
 **It is mandatory that you change the logo included with this repository (located in ./images/logo.png) after forking, if you plan to use the player publically.**
 
 ## Screenshots
