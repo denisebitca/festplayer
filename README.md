@@ -1,4 +1,4 @@
-# festplayer ![Release](https://img.shields.io/badge/release-v0.2-blue.svg) ![early-dev](https://img.shields.io/badge/in%20very%20early%20development-red.svg) [![License](https://img.shields.io/badge/license-multiple-yellow.svg)](https://github.com/JamesHeinrich/getID3/blob/master/license.txt) [![Website](https://img.shields.io/badge/website-up-green.svg)](https://***REMOVED***/27cbd448b7e30e3661a25592f3db9cb8/festplayer/)
+# festplayer ![Release](https://img.shields.io/badge/release-v0.2-blue.svg) ![early-dev](https://img.shields.io/badge/in%20very%20early%20development-red.svg) [![License](https://img.shields.io/badge/license-multiple-yellow.svg)](https://github.com/JamesHeinrich/getID3/blob/master/license.txt)
 <img src="https://i.imgur.com/qkT4P1s.png" width="50%" height="50%">
 
 ## About
@@ -26,6 +26,3 @@ Festplayer requires an internet connection because CDNs are used.
 
 ## Future development plans
 ![Flowchart](https://i.imgur.com/rsNh7XL.png)
-
-## Website
-The website won't always run the latest version of festplayer, but more often than not, it'll have it.
