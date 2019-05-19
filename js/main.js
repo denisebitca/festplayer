@@ -1,5 +1,9 @@
+/*
+Festplayer v0.2.1 - main.js
+by rdb-github
+*/
 var resultarray = [];
-
+console.log("Festplayer v0.2.1");
 $.get('./api/getsongs.php', function(result){
 	//document.getElementById("loading").style.display = "block";
 		if (result == "NIGHT_EMPTY") {

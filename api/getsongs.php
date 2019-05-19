@@ -1,4 +1,8 @@
 <?php
+/*
+Festplayer v0.2.1 - getsongs.php
+by rdb-github
+*/
 require_once('./getid3/getid3.php');
 header('Content-Type: application/json');
 $dir = "../../songs"; 
@@ -16,33 +20,35 @@ function getlist(){
     $list = array(); 
     $filename = 'latestresults.json';
     $countFiles = 0;
-    if(is_dir($dir)){
-        if($dh = opendir($dir)){
-            while(($file = readdir($dh)) != false){
-                $info = new SplFileInfo($file);
-                $extension = pathinfo($info->getFilename(), PATHINFO_EXTENSION);
-                if($file == "." or $file == ".."){
-                //no
-                } elseif($extension != "mp3") {
-                //no  
-                } else {
-                    $getID3 = new getID3;
-                    $ThisFileInfo = $getID3->analyze($dir . '/' . $file);
-                    $len= @$ThisFileInfo['playtime_string'];
-                    $list3 = array(
-                    'file' => $file,
-                    'duration' => $len);
-                    array_push($list, $list3);
+    if ($files){
+        $countFiles = count($files);
+        if(is_dir($dir)){
+            if($dh = opendir($dir)){
+                while(($file = readdir($dh)) != false){
+                    $info = new SplFileInfo($file);
+                    $extension = pathinfo($info->getFilename(), PATHINFO_EXTENSION);
+                    if($file == "." or $file == ".."){
+                    //no
+                    } elseif($extension != "mp3") {
+                    //no  
+                    } else {
+                        $getID3 = new getID3;
+                        $ThisFileInfo = $getID3->analyze($dir . '/' . $file);
+                        $len= @$ThisFileInfo['playtime_string'];
+                        $list3 = array(
+                        'file' => $file,
+                        'duration' => $len);
+                        array_push($list, $list3);
+                    }
                 }
             }
-        }
         
-        echo json_encode($list);
-        file_put_contents('latestresults.json', json_encode($list));
-        if ($files){
-        $countFiles = count($files);
+            echo json_encode($list);
+            file_put_contents('latestresults.json', json_encode($list));
+            file_put_contents('filecount', $countFiles);
         }
-        file_put_contents('filecount', $countFiles);
+    } else {
+        echo "NIGHT_EMPTY";
     }
 }
 
