@@ -2,7 +2,7 @@
 <img src="https://i.imgur.com/qkT4P1s.png" width="50%" height="50%">
 
 ## About
-Festplayer is an open-source web-based music player made by [rdb-github](https://github.com/rdb-github) with planned remote use capabilities written with HTML, CSS, JS and PHP. It's not intended for actual day-to-day use, it's a project I'm writing for a future event.
+Festplayer is an open-source web server-localised music player made by [rdb-github](https://github.com/rdb-github) with planned remote use capabilities written with HTML, CSS, JS and PHP. It's not intended for actual day-to-day use, it's a project I'm writing for a future event.
 
 **Please be aware the project includes [getid3 v3](https://github.com/JamesHeinrich/getID3), and as such is subject to [the following licenses](https://github.com/JamesHeinrich/getID3/blob/master/license.txt).**
 
