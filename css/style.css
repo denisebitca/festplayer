@@ -50,10 +50,10 @@ html, body {
 	color: #333333
 }
 #repeat:hover, #volume:hover{
-	color: white
+	color: #CCCCCC
 }
 #repeat[name="repeat-one"],#volume[name="slidershow"]{
-	color: white
+	color: #CCCCCC
 }
 #vol-control {
 	-webkit-appearance: none;
