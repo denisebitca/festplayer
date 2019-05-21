@@ -2,13 +2,13 @@
 <html>
   <head>
     <meta name="robots" content="noindex">
-	<meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8" name="viewport" content="initial-scale=1">
     <title>Festplayer</title>
     <link rel="stylesheet" href="./css/style.css">
 	<link rel="stylesheet" href="./css/simplebar.min.css">
 	<link href="./css/icon.css"
       rel="stylesheet">
-    <script src="./js/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="./js/jquery-3.4.1.min.js"></script>
 	<script src="./js/audio.min.js"></script>
 	<script src="./js/main.js"></script>
 	<script src="./js/simplebar.js"></script>
@@ -19,14 +19,20 @@
 			<a href="/"><img id="logo" alt="logo" src="./images/festi.png"></a>
 			<h1 id="programname">festplayer</h1>
 			<div id="space"></div>
-			<img id="remote" alt="Iniciate remote control" src="./images/remote.svg">
-		</div>
-		<div id="remotemobile">
-			<a onclick="remotecontrol()" href="javascript:void(0)">CLICK HERE TO START REMOTE CONTROL</a>
+			<a href="javascript:remotecontrol()"><img name="remote" id="remote" alt="Iniciate remote control" src="./images/remote.svg"></a>
 		</div>
 		<div id="mainpage">
 			<div id="songcontainer"><h1 id="loading">Loading...</h1></div>
 			<div id="footer"></div>
+		</div>
+		<div id="remotepagemobile">
+			<div id="elementcontainer">
+				<div id="elements">
+					<h1 style="width: 300px">Please insert the code you got from your computer.</h1>
+					<textarea maxlength="7" placeholder="ABC123D"></textarea>
+					<a href="#" class="myButton">Connect</a>
+				</div>
+			</div>
 		</div>
 	</div>
   </body>
