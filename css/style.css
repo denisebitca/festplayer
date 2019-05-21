@@ -35,6 +35,7 @@ html, body {
 #remote{
 	min-width: 60px;
 	filter: invert(1);
+	cursor: pointer;
 	align-self: center
 }
 #space{
@@ -101,7 +102,7 @@ html, body {
 ::placeholder, ::-webkit-input-placeholder, :-ms-input-placeholder {
   color: #a3a3a3
 }
-#remotepagemobile{
+#remotepagemobile,#remotepagecomputer{
 	display: none;
 	width: 100%;
 	height: calc(100% - 75px);
@@ -110,12 +111,19 @@ html, body {
 	align-items: center;
 	background-color: #3c3c3c
 }
-#elements>h1{
+#elements>h1,#elementspc>h1{
 	text-align: center;
 	font-family: Arial;
 	color: white;
 	font-size: 30px;
 	font-weight: bold
+}
+#elementspc>h1:nth-child(2){
+	font-size:70px
+}
+#elementspc>h1:nth-child(3){
+	font-size:20px;
+	color: #a3a3a3
 }
 .myButton {
 	-moz-box-shadow: 0px 1px 0px 0px #1c1b18;
@@ -158,7 +166,7 @@ html, body {
     font-size: 60px;
     text-align: center;
 }
-#elements{
+#elements,#elementspc{
 	display: grid;
     grid-template-columns: none;
     align-items: center;
@@ -313,7 +321,7 @@ html, body {
 	}*/
 }
 @media only screen and (max-height: 400px){
-	#elementcontainer{
+	#elementcontainer,#elementpccontainer{
 		transform: scale(0.7)
 	}
 }

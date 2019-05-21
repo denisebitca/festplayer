@@ -4,6 +4,13 @@ by rdb-github
 */
 var resultarray = [];
 console.log("Festplayer v0.2.1");
+
+window.onload = function() {
+	document.getElementById('remote').addEventListener('click', function (e) {
+		remotecontrol();
+	});
+}
+
 $.get('./api/getsongs.php', function(result){
 	//document.getElementById("loading").style.display = "block";
 		if (result == "NIGHT_EMPTY") {
@@ -124,12 +131,16 @@ function remotecontrol(){
 		$("#mainpage").hide();
 		$("#remotepagemobile").attr("style","display:flex;");
 	} else if(!jQuery.browser.mobile && document.getElementById("remote").getAttribute("name") == "remote"){
-		// WIP
+		document.getElementById("remote").setAttribute("name","clicked")
+		$("#mainpage").hide();
+		$("#remotepagecomputer").attr("style","display:flex;");
 	} else if(jQuery.browser.mobile && document.getElementById("remote").getAttribute("name") == "clicked"){
 		document.getElementById("remote").setAttribute("name","remote")
 		$("#remotepagemobile").hide();
 		$("#mainpage").show();
 	} else if(!jQuery.browser.mobile && document.getElementById("remote").getAttribute("name") == "clicked"){
-		// WIP
+		document.getElementById("remote").setAttribute("name","remote")
+		$("#remotepagecomputer").hide();
+		$("#mainpage").show();
 	}
 }
