@@ -53,7 +53,7 @@ html, body {
 	color: white
 }
 #repeat[name="repeat-one"],#volume[name="slidershow"]{
-	color: #4ABDAC
+	color: white
 }
 #vol-control {
 	-webkit-appearance: none;
@@ -320,8 +320,13 @@ html, body {
 		color: white;
 	}*/
 }
+@media only screen and (max-height: 450px){
+	#elementpccontainer{
+		transform: scale(0.6)
+	}
+}
 @media only screen and (max-height: 400px){
-	#elementcontainer,#elementpccontainer{
+	#elementcontainer{
 		transform: scale(0.7)
 	}
 }
