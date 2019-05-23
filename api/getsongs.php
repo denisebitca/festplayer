@@ -4,7 +4,6 @@ Festplayer v0.2.1 - getsongs.php
 by rdb-github
 */
 require_once('./getid3/getid3.php');
-header('Content-Type: application/json');
 $dir = "../../songs"; 
 $infodir = new SplFileInfo($dir);
 $lastmodif = date('d/m/Y H:i:s', $infodir->getMTime());
@@ -46,7 +45,7 @@ function getlist(){
                     }
                 }
             }
-        
+            header('Content-Type: application/json');
             echo json_encode($list);
             file_put_contents($filename, json_encode($list));
             /*file_put_contents('filecount', $countFiles);*/
@@ -64,6 +63,7 @@ if (file_exists($filename)/* && file_exists("filecount")*/ && file_exists("lastm
     if($lastmodif != file_get_contents("lastmodified")){
         getlist();
     } else {
+        header('Content-Type: application/json');
         echo file_get_contents('latestresults.json');
     }
 } else {

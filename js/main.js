@@ -15,6 +15,7 @@ $.get('./api/getsongs.php', function(result) {
     //document.getElementById("loading").style.display = "block";
     if (result == "NIGHT_EMPTY") {
         alert("no songs lol");
+        console.log("test")
     } else {
         var amountofarticles = result.length;
         for (i = 0; amountofarticles > i; i++) {
