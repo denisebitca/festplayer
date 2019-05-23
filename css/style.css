@@ -300,6 +300,9 @@ html, body {
 		font-size:15px;
 		margin-bottom: 40px !important
 	}
+	#elementpccontainer{
+		transform: scale(0.7)
+	}
 }
 @media only screen and (max-width: 375px){
 	#programname{
