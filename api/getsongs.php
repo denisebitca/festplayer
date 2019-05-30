@@ -9,11 +9,6 @@ $infodir = new SplFileInfo($dir);
 $lastmodif = date('d/m/Y H:i:s', $infodir->getMTime());
 $list = array(); 
 $filename = 'latestresults.json';
-/*$countFiles = 0;
-$files = glob($dir . "/*.mp3");
-if ($files){
-    $countFiles = count($files);
-}*/
 
 function getlist(){
     $dir = "../../songs";
