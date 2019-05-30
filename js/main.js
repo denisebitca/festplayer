@@ -12,6 +12,7 @@ window.onload = function() {
 };
 
 var socket;
+var remote = false;
 
 $.get('./api/getsongs.php', function(result) {
     //document.getElementById("loading").style.display = "block";
@@ -95,13 +96,17 @@ $.get('./api/getsongs.php', function(result) {
 
 function selectSong(song) {
     if ($(".song")[song].getAttribute("name") == "selected") {
-        if (audiojs.instances.audiojs0.playing) {
-            document.title = "Festplayer";
+        if(!remote){
+            if (audiojs.instances.audiojs0.playing) {
+                document.title = "Festplayer";
+            }
+            if ($(".song")[song].getAttribute("name") == "selected" && !audiojs.instances.audiojs0.playing) {
+                document.title = $(".songname")[song].innerHTML + " | Festplayer";
+            }
+            audiojs.instances.audiojs0.playPause();
+        } else {
+            //WIP
         }
-        if ($(".song")[song].getAttribute("name") == "selected" && !audiojs.instances.audiojs0.playing) {
-            document.title = $(".songname")[song].innerHTML + " | Festplayer";
-        }
-        audiojs.instances.audiojs0.playPause();
     } else {
         $('.song[name=selected]')[0].setAttribute("style", "");
         $('.song[name=selected]')[0].setAttribute("name", "");
@@ -155,7 +160,7 @@ function getCode(){
 
     socket.onmessage = function (event) {
         var status = JSON.parse(event.data)[0].status;
-        if(status == "awaiting_registration"){
+        if(status == "awaiting"){
             $.get('./api/remote.php', function(result) {
                 code = JSON.parse(result).code;
             }).then(function(){
