@@ -30,25 +30,22 @@ function getlist(){
                 while(($file = readdir($dh)) != false){
                     $info = new SplFileInfo($file);
                     $extension = pathinfo($info->getFilename(), PATHINFO_EXTENSION);
-                    if($file == "." or $file == ".."){
-                    //no
-                    } elseif($extension != "mp3") {
-                    //no  
-                    } else {
-                        $getID3 = new getID3;
-                        $ThisFileInfo = $getID3->analyze($dir . '/' . $file);
-                        $len= @$ThisFileInfo['playtime_string'];
-                        $list3 = array(
-                        'file' => $file,
-                        'duration' => $len);
-                        array_push($list, $list3);
+                    if($file != "." or $file != ".." ) {
+                        if ($extension == "mp3") {
+                            $getID3 = new getID3;
+                            $ThisFileInfo = $getID3->analyze($dir . '/' . $file);
+                            $len= @$ThisFileInfo['playtime_string'];
+                            $list3 = array(
+                            'file' => $file,
+                            'duration' => $len);
+                            array_push($list, $list3);
+                        }
                     }
                 }
             }
             header('Content-Type: application/json');
             echo json_encode($list);
             file_put_contents($filename, json_encode($list));
-            /*file_put_contents('filecount', $countFiles);*/
             file_put_contents('lastmodified', $lastmodif);
         }
     } else {
@@ -56,10 +53,7 @@ function getlist(){
     }
 }
 
-if (file_exists($filename)/* && file_exists("filecount")*/ && file_exists("lastmodified")) {
-    /*if($countFiles != file_get_contents("filecount")){
-        getlist();
-    } else */
+if (file_exists($filename) && file_exists("lastmodified")) {
     if($lastmodif != file_get_contents("lastmodified")){
         getlist();
     } else {
