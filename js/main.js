@@ -11,6 +11,8 @@ window.onload = function() {
     });
 };
 
+var socket;
+
 $.get('./api/getsongs.php', function(result) {
     //document.getElementById("loading").style.display = "block";
     if (result == "NIGHT_EMPTY") {
@@ -144,7 +146,7 @@ function setVolume(svolume) {
 })(navigator.userAgent || navigator.vendor || window.opera);
 
 function getCode(){
-    var socket = new WebSocket('ws://localhost:3210');
+    socket = new WebSocket('ws://localhost:3210');
     var code;
 
     socket.onerror = function(error) {
@@ -164,6 +166,9 @@ function getCode(){
         } else if(status == "successfully_registered"){
             console.log("Code registered successfully!");
             document.getElementById("code").innerHTML = code;
+            $("#elementspc > h1:nth-child(1)").show();
+            $("#elementspc > h1:nth-child(3)").show();
+            $("#elementspc > h1:nth-child(4)").show();
         } else {
             console.error("Odd error, please check websocket error message: " + status);
         }
@@ -189,8 +194,12 @@ function remotecontrol() {
         $("#mainpage").show();
     } else if (!jQuery.browser.mobile && document.getElementById("remote").getAttribute("name") == "clicked") {
         document.getElementById("remote").setAttribute("name", "remote");
+        $("#elementspc > h1:nth-child(1)").hide();
+        $("#elementspc > h1:nth-child(3)").hide();
+        $("#elementspc > h1:nth-child(4)").hide();
         $("#remotepagecomputer").hide();
         document.getElementById("code").innerHTML = "Loading...";
         $("#mainpage").show();
+        socket.close();
     }
 }

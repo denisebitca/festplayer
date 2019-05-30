@@ -20,6 +20,9 @@ html, body {
 	position: relative;
 	align-items: center
 }	
+#elementspc > h1:nth-child(1), #elementspc > h1:nth-child(3), #elementspc > h1:nth-child(4){
+	display:none;
+}
 #logo{
 	width: 100px;
 	margin-top: 4px;
