@@ -144,9 +144,30 @@ function setVolume(svolume) {
 })(navigator.userAgent || navigator.vendor || window.opera);
 
 function getCode(){
-    $.get('./api/remote.php', function(result) {
-        document.getElementById("code").innerHTML = JSON.parse(result).code;
-    })
+    var socket = new WebSocket('ws://localhost:3210');
+    var code;
+
+    socket.onerror = function(error) {
+      console.log('WebSocket Error: ' + error);
+    };
+
+    socket.onmessage = function (event) {
+        var status = JSON.parse(event.data)[0].status;
+        if(status == "awaiting_registration"){
+            $.get('./api/remote.php', function(result) {
+                code = JSON.parse(result).code;
+            }).then(function(){
+                socket.send('[{"remotecode":"' + code + '"}]');
+            })
+        } else if(status == "registering"){
+            console.log("Code is being registered");
+        } else if(status == "successfully_registered"){
+            console.log("Code registered successfully!");
+            document.getElementById("code").innerHTML = code;
+        } else {
+            console.error("Odd error, please check websocket error message: " + status);
+        }
+    }
 }
 
 function remotecontrol() {
@@ -158,10 +179,10 @@ function remotecontrol() {
         $("#mainpage").hide();
         $("#remotepagemobile").attr("style", "display:flex;");
     } else if (!jQuery.browser.mobile && document.getElementById("remote").getAttribute("name") == "remote") {
-        getCode();
         $("#mainpage").hide();
         $("#remotepagecomputer").attr("style", "display:flex;");
         document.getElementById("remote").setAttribute("name", "clicked");
+        getCode();
     } else if (jQuery.browser.mobile && document.getElementById("remote").getAttribute("name") == "clicked") {
         document.getElementById("remote").setAttribute("name", "remote");
         $("#remotepagemobile").hide();
@@ -169,6 +190,7 @@ function remotecontrol() {
     } else if (!jQuery.browser.mobile && document.getElementById("remote").getAttribute("name") == "clicked") {
         document.getElementById("remote").setAttribute("name", "remote");
         $("#remotepagecomputer").hide();
+        document.getElementById("code").innerHTML = "Loading...";
         $("#mainpage").show();
     }
 }
