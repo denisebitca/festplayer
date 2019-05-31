@@ -20,7 +20,7 @@ Festplayer is an open-source web server-localised music player, that can be cont
 Festplayer is weird. You must place your songs in **../songs**.
 Make sure PHP is correctly configured.
 
-You will need to create a file named "credentials.php" in ./api/:
+> You will need to create a file named "credentials.php" in ``./api/``:
 
 ```php
 <?php
@@ -32,6 +32,16 @@ $dbname = "remote_codes";
 ```
 
 And as you have guessed it, create a MySQL database named "remote_codes" with the table "to_be_connected" inside of it, and within the table the columns CODE(TEXT), IPCOMP(TEXT) and DATE(DATE).
+
+```sql
+CREATE DATABASE `remote_codes`;
+SELECT * FROM `remote_codes`;
+CREATE TABLE `to_be_connected` (
+	`CODE` TEXT,
+	`IPCOMP` TEXT,
+	`DATE` DATE
+);
+```
 
 ## Screenshots
 
