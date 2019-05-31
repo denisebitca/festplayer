@@ -17,7 +17,13 @@ Festplayer is an open-source web server-localised music player, that can be cont
 *Big thank you to [audio.js](http://kolber.github.io/audiojs/) for being part of the humble beginnings.*
 
 ## Use
-Festplayer is weird. You must place your songs in **../songs**.
+Here are all the steps to get Festplayer running.
+
+> You'll need to install node.js and npm to get the websocket server running in ``./webserver_node``. Contrary to what the program might say, it will always connect to http://localhost:3210.
+
+> Make sure you have write and read rights inside ``./api/``.
+
+> Festplayer is weird. You must place your songs in ``../songs``.
 Make sure PHP is correctly configured.
 
 > You will need to create a file named "credentials.php" in ``./api/`` with your SQL credentials:
@@ -35,7 +41,6 @@ $dbname = "remote_codes";
 
 ```sql
 CREATE DATABASE `remote_codes`;
-SELECT * FROM `remote_codes`;
 CREATE TABLE `to_be_connected` (
 	`CODE` TEXT,
 	`IPCOMP` TEXT,
