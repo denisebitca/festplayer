@@ -6,11 +6,11 @@
 Use some of the releases instead.
 
 ## About
-Festplayer is an open-source web server-localised music player made by [rdb-github](https://github.com/rdb-github) with planned remote use capabilities written with HTML, CSS, JS and PHP. It's not intended for actual day-to-day use, it's a project I'm writing for a future event.
+Festplayer is an open-source web server-localised music player, that can be controlled remotely, written with HTML, Node.js, CSS, JS and PHP. It's not intended for actual day-to-day use, it's a project I'm writing for a future event.
 
 **Please be aware the project includes [getid3 v3](https://github.com/JamesHeinrich/getID3), and as such is subject to [the following licenses](https://github.com/JamesHeinrich/getID3/blob/master/license.txt).**
 
-**Please be aware the project also includes [howler.js](https://github.com/goldfire/howler.js) and [SimpleBar](https://github.com/Grsmto/simplebar), both subject to the [MIT License](https://opensource.org/licenses/MIT).**
+**Please be aware the project also includes [tingle](https://github.com/robinparisi/tingle), [howler.js](https://github.com/goldfire/howler.js) and [SimpleBar](https://github.com/Grsmto/simplebar), both subject to the [MIT License](https://opensource.org/licenses/MIT).**
 
 **Please be equally aware the project includes [material design icons](https://material.io/icons), which means that you may not package this project with any paid software or profit from it in anyway (even with the getid3 Commercial License).**
 
@@ -19,6 +19,19 @@ Festplayer is an open-source web server-localised music player made by [rdb-gith
 ## Use
 Festplayer is weird. You must place your songs in **../songs**.
 Make sure PHP is correctly configured.
+
+You will need to create a file named "credentials.php" in ./api/:
+
+```php
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "password";
+$dbname = "remote_codes"; 
+?>
+```
+
+And as you have guessed it, create a MySQL database named "remote_codes" with the table "to_be_connected" inside of it, and within the table the columns CODE(TEXT), IPCOMP(TEXT) and DATE(DATE).
 
 ## Screenshots
 
