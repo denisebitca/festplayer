@@ -1,5 +1,5 @@
 /*
-Festplayer v0.2.1 - style.css
+Festplayer v1 - style.css
 by rdb-github
 */
 html, body {
@@ -22,6 +22,9 @@ html, body {
 }	
 #elementspc > h1:nth-child(1), #elementspc > h1:nth-child(3), #elementspc > h1:nth-child(4){
 	display:none;
+}
+.custom-class-1{
+	font-family: Arial, Helvetica, sans-serif;
 }
 #logo{
 	width: 100px;
@@ -49,10 +52,15 @@ html, body {
 	margin-left: 10px;
 	cursor: pointer
 }
+#playpause{
+	color: white;
+	font-size: 40px !important;
+	display: none;
+}
 #repeat, #volume{
 	color: #333333
 }
-#repeat:hover, #volume:hover{
+#repeat:hover, #volume:hover, #playpause:hover{
 	color: #CCCCCC
 }
 #repeat[name="repeat-one"],#volume[name="slidershow"]{

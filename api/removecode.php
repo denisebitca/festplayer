@@ -1,9 +1,6 @@
 <?php
 
-$servername = "localhost";
-$username = "newuser";
-$password = "default_change_please@";
-$dbname = "remote_codes";
+require_once("credentials.php");
 $CODE = $_GET["code"];
 
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -26,3 +23,5 @@ if ($result === TRUE) {
 
 echo json_encode($fin);
 $conn->close();
+
+?>

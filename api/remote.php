@@ -1,5 +1,7 @@
 <?php
 
+require_once("credentials.php");
+
 $permitted_chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
  
 function generate_string($input, $strength = 16) {
@@ -13,11 +15,6 @@ function generate_string($input, $strength = 16) {
     return $random_string;
 }
 
-$servername = "localhost";
-$username = "newuser";
-$password = "default_change_please@";
-$dbname = "remote_codes";
-
 $conn = new mysqli($servername, $username, $password, $dbname);
 
 if ($conn->connect_error) {
@@ -26,7 +23,7 @@ if ($conn->connect_error) {
 
 $code = generate_string($permitted_chars, 7);
 $randomcode = array("code" => $code);
-$date = date("Y-m-d h:i:sa");
+$date = date("Y-m-d");
 $computerip = $_SERVER['REMOTE_ADDR']; 
 
 $sql = "INSERT INTO to_be_connected (CODE, IPCOMP, DATE)

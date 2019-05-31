@@ -6,10 +6,12 @@
     <title>Festplayer</title>
     <link rel="stylesheet" href="./css/style.css">
 	<link rel="stylesheet" href="./css/simplebar.min.css">
+	<link rel="stylesheet" href="./css/tingle.min.css">
 	<link href="./css/icon.css"
       rel="stylesheet">
     <script src="./js/jquery-3.4.1.min.js"></script>
 	<script src="./js/audio.min.js"></script>
+	<script src="./js/tingle.min.js"></script>
 	<script src="./js/main.js"></script>
 	<script src="./js/simplebar.js"></script>
   </head>
@@ -29,8 +31,8 @@
 			<div id="elementcontainer">
 				<div id="elements">
 					<h1 style="width: 300px">Please insert the code you got from your computer.</h1>
-					<textarea maxlength="7" placeholder="ABC123D"></textarea>
-					<a href="#" class="myButton">Connect</a>
+					<textarea id="codus" maxlength="7" placeholder="ABC123D"></textarea>
+					<a href="javascript:checkCode($('#codus').val())" class="myButton">Connect</a>
 				</div>
 			</div>
 		</div>

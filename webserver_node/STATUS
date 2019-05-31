@@ -1,0 +1,29 @@
+[{"status":"awaiting"}]
+[{"status":"invalid_query"}] x
+[{"status":"this_is_yours"}] x
+[{"status":"already_registered"}] x
+[{"status":"code_already_registered"}] x
+[{"status":"registering"}]
+[{"status":"successfully_registered"}]
+[{"status":"invalid_code"}] x
+---
+[{"status":"already_paired_code"}] x
+[{"status":"pairing"}]
+[{"status":"bored_security_researcher"}] x
+[{"status":"establishing_connection"}]
+[{"status":"successfully_paired_with_phone"}]
+[{"status":"successfully_paired_with_computer"}]
+[{"status":"invalid_code"}] x
+---
+[{"status":"phone_disconnected"}]
+[{"status":"awaiting"}]
+---
+[{"status":"computer_disconnected"}]
+[{"status":"awaiting"}]
+---
+[{"status":"command_successful"}]
+[{"status":"invalid_command"}] x
+
+
+
+x marks an invalid status

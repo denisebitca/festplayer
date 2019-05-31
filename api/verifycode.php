@@ -1,9 +1,7 @@
 <?php
 
-$servername = "localhost";
-$username = "newuser";
-$password = "default_change_please@";
-$dbname = "remote_codes";
+require_once("credentials.php");
+
 $CODE = $_GET["code"];
 
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -20,10 +18,10 @@ header('Content-Type: application/json');
 
 if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
-        $fin = array(code => $CODE, validity => true);
+        $fin = array('code' => $CODE, 'validity' => true);
     }
 } else {
-        $fin = array(code => $CODE, validity => false);
+        $fin = array('code' => $CODE, 'validity'=> false);
 }
 
 echo json_encode($fin);
