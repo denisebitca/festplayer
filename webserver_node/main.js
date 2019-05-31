@@ -286,6 +286,8 @@ wss.on('connection', function(ws) {
                                                 client.send('[{"status":"successfully_paired_with_phone"}]')
                                                 ws.send('[{"status":"successfully_paired_with_computer"}]')
                                                 console.log(moonbear[i].computerid + " (computer) and " + moonbear[i].phoneid + " (phone) have paired together")
+                                                client.type = "computer";
+                                                ws.type = "phone";
                                                 //pairCode(moonbear[i].remoteid);
                                             }
                                         })
@@ -354,12 +356,13 @@ wss.on('connection', function(ws) {
 
 const interval = setInterval(function ping() {
     wss.clients.forEach(function each(ws) {
-      if (ws.isAlive === false) return ws.terminate();
-  
+        if (ws.isAlive === false){
+            ws.terminate();
+        }
       ws.isAlive = false;
       ws.ping(console.log(ws.id + " has been pinged"));
     });
-  }, 30000);
+  }, 60000);
 
 server.listen(3210, function() {
   console.log('Listening on http://192.168.1.87:3210');

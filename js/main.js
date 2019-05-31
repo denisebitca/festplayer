@@ -17,7 +17,9 @@ var remote = false;
 var remoteaccess;
 var remotephone = false;
 var playings = false;
+var sound;
 var resultvar;
+var loop = false;
 
 function isOpen(ws) { return ws.readyState === ws.OPEN }
 
@@ -68,8 +70,6 @@ $.get('./api/getsongs.php', function(result) {
         console.log(resultarray);
         for (i = 0; amountofarticles > i; i++) {
             if (i == 0) {
-                var audio = $('<audio></audio>').attr("src", "../songs" + "/" + result[i].file);
-                $('#footer').append(audio);
                 document.getElementById("loading").style.display = "none";
             }
             var article = $("<div></div>").addClass('song');
@@ -100,8 +100,14 @@ $.get('./api/getsongs.php', function(result) {
         }
         $('.song')[0].setAttribute("style", "filter: invert(1)");
         $('.song')[0].setAttribute("name", "selected");
-        audiojs.events.ready(function() {
+        /*audiojs.events.ready(function() {
             var as = audiojs.createAll();
+        });*/
+        sound = new Howl({
+            src: [resultarray[0]],
+            html5: true,
+            autoplay: false,
+            loop: loop
         });
         new SimpleBar($('#songcontainer')[0]);
         var buttons = $('<i></i>').attr({
@@ -142,28 +148,26 @@ $.get('./api/getsongs.php', function(result) {
 
 function selectSong(song) {
     if ($(".song")[song].getAttribute("name") == "selected") {
-        if(!remotephone){
-            if (audiojs.instances.audiojs0.playing) {
-                document.title = "Festplayer";
-            }
-            if ($(".song")[song].getAttribute("name") == "selected" && !audiojs.instances.audiojs0.playing) {
-                document.title = $(".songname")[song].innerHTML + " | Festplayer";
-            }
-            audiojs.instances.audiojs0.playPause();
-        } else {
-            //WIP
-        }
+        playPause();
     } else {
         if(!remotephone){
             $('.song[name=selected]')[0].setAttribute("style", "");
             $('.song[name=selected]')[0].setAttribute("name", "");
-            document.title = "Festplayer";
-            document.title = resultarray[song].replace("../songs/", "").replace(".mp3", "") + " | Festplayer";
-            audiojs.instances.audiojs0.load(window.resultarray[song]);
-            if (audiojs.instances.audiojs0.playing) {
-                audiojs.instances.audiojs0.playPause();
+            if(playings == true){
+                sound.pause()
+                sound = undefined;
+                playings = false;
             }
-            audiojs.instances.audiojs0.playPause();
+            sound = new Howl({
+                src: [resultarray[song]],
+                html5: true,
+                autoplay: true,
+                loop: loop,
+                onplay: function(){document.title = $(".songname")[song].innerHTML + " | Festplayer"},
+                onpause: function(){document.title = "Festplayer"}
+            });
+            document.getElementById("playpause").innerHTML = "pause_circle_filled";
+            playings = true;
             $('.song')[song].setAttribute("style", "filter: invert(1)");
             $('.song')[song].setAttribute("name", "selected");
             $('.song')[song].scrollIntoView();
@@ -196,10 +200,12 @@ function repeat() {
     } else {
         if (document.getElementById("repeat").getAttribute("name") == "norepeat") {
             document.getElementById("repeat").setAttribute("name", "repeat-one");
-            audiojs.instances.audiojs0.element.loop = true;
+            sound.loop(true);
+            loop = true;
         } else if (document.getElementById("repeat").getAttribute("name") == "repeat-one") {
             document.getElementById("repeat").setAttribute("name", "norepeat");
-            audiojs.instances.audiojs0.element.loop = false;
+            sound.loop(false);
+            loop = false;
         }
     }
 }
@@ -219,21 +225,35 @@ function setVolume(svolume) {
         if (!isOpen(socket)) steamrolla("You've been disconnected. Your page will reload now.", true)
         socket.send('[{"onmobile":true,"volume":' + svolume + '}]');
     } else {
-        $("audio")[0].volume = svolume / 100;
+        if(Howler.state === "running"){
+            sound.volume(svolume / 100);
+        }
     }
 }
 
 function playPause(){
-    if(playings == true){
-        document.getElementById("playpause").innerHTML = "play_circle_filled"
-        if (!isOpen(socket)) steamrolla("You've been disconnected. Your page will reload now.", true)
-        socket.send('[{"onmobile":true,"playing":false}]');   
-        playings = false;   
+    if(remotephone){
+        if(playings == true){
+            document.getElementById("playpause").innerHTML = "play_circle_filled"
+            if (!isOpen(socket)) steamrolla("You've been disconnected. Your page will reload now.", true)
+            socket.send('[{"onmobile":true,"playing":false}]');   
+            playings = false;   
+        } else {
+            document.getElementById("playpause").innerHTML = "pause_circle_filled"
+            if (!isOpen(socket)) steamrolla("You've been disconnected. Your page will reload now.", true)
+            socket.send('[{"onmobile":true,"playing":true}]'); 
+            playings = true;
+        }
     } else {
-        document.getElementById("playpause").innerHTML = "pause_circle_filled"
-        if (!isOpen(socket)) steamrolla("You've been disconnected. Your page will reload now.", true)
-        socket.send('[{"onmobile":true,"playing":true}]'); 
-        playings = true;
+        if(playings == true){
+            document.getElementById("playpause").innerHTML = "play_circle_filled"
+            sound.pause();
+            playings = false;   
+        } else {
+            document.getElementById("playpause").innerHTML = "pause_circle_filled"
+            sound.play();
+            playings = true;
+        }
     }
 }
 
@@ -273,8 +293,8 @@ function checkCode(code){
             } else if(status == "successfully_paired_with_computer"){
                 remotephone = true;
                 $("#remotepagemobile").hide();
-                $("#audiojs_wrapper0").hide();
-                $("#playpause").show();
+                /*$("#audiojs_wrapper0").hide();
+                $("#playpause").show();*/
                 $("#mainpage").show();
                 steamrolla("Remote control has been enabled. Click on the remote to disconnect.", false)
             } else if(status == "command_successful"){
@@ -328,8 +348,6 @@ function getCode(){
                 $("#elementspc > h1:nth-child(1)").hide();
                 $("#elementspc > h1:nth-child(3)").hide();
                 $("#elementspc > h1:nth-child(4)").hide();
-                $(".scrubber")[0].setAttribute("style","pointer-events:none");
-                $(".play-pause")[0].setAttribute("style","display:none");
                 $(".material-icons")[0].setAttribute("style","pointer-events:none");
                 $(".material-icons")[1].setAttribute("style","pointer-events:none");
                 for (i = 0; resultarray.length > i; i++) {
@@ -342,15 +360,15 @@ function getCode(){
                 remoteaccess = true;
                 $("#mainpage").show();
             } else if(status == "phone_disconnected"){
-                if(audiojs.instances.audiojs0.playing){
-                    audiojs.instances.audiojs0.playPause();
+                if(sound.playing()){
+                    playPause();
                 }
                 steamrolla("Your phone disconnected.", true)
                 remoteaccess = false;
             } else if(status == "pause"){
-                audiojs.instances.audiojs0.playPause();
+                playPause();
             } else if(status == "play"){
-                audiojs.instances.audiojs0.playPause();
+                playPause();
             } else {
                 console.error("Odd error, please check websocket error message: " + status);
                 return;
@@ -374,8 +392,8 @@ function getCode(){
 
 
 function remotecontrol() {
-    if (audiojs.instances.audiojs0.playing) {
-        audiojs.instances.audiojs0.playPause();
+    if(sound.playing()){
+        playPause();
     }
     if (jQuery.browser.mobile && document.getElementById("remote").getAttribute("name") == "remote") {
         document.getElementById("remote").setAttribute("name", "clicked");
