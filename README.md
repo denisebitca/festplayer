@@ -10,9 +10,11 @@ Festplayer is an open-source web server-localised music player made by [rdb-gith
 
 **Please be aware the project includes [getid3 v3](https://github.com/JamesHeinrich/getID3), and as such is subject to [the following licenses](https://github.com/JamesHeinrich/getID3/blob/master/license.txt).**
 
-**Please be aware the project also includes [audio.js](https://github.com/kolber/audiojs) and [SimpleBar](https://github.com/Grsmto/simplebar), both subject to the [MIT License](https://opensource.org/licenses/MIT).**
+**Please be aware the project also includes [howler.js](https://github.com/goldfire/howler.js) and [SimpleBar](https://github.com/Grsmto/simplebar), both subject to the [MIT License](https://opensource.org/licenses/MIT).**
 
 **Please be equally aware the project includes [material design icons](https://material.io/icons), which means that you may not package this project with any paid software or profit from it in anyway (even with the getid3 Commercial License).**
+
+*Big thank you to [audio.js](http://kolber.github.io/audiojs/) for being part of the humble beginnings.*
 
 ## Use
 Festplayer is weird. You must place your songs in **../songs**.
