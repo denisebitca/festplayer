@@ -47,6 +47,14 @@ html, body {
 #space{
 	width: calc(100% - 75px)
 }
+.line{
+    width: 300px;
+    background: #333333;
+}
+.line2{
+	border-bottom: 3px solid white;
+	width: 0px;
+}
 .material-icons{
 	margin-right: 10px;
 	margin-left: 10px;
@@ -287,12 +295,8 @@ html, body {
 	}
 }
 @media only screen and (max-width: 500px){
-	.audiojs{
-		width: 70%;
-		resize: both
-	}
-	.scrubber{
-		display:none
+	.line{
+		width: 150px;
 	}
 	.songposition{
 		font-size: 20px;

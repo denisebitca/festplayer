@@ -17,7 +17,9 @@ var remote = false;
 var remoteaccess;
 var remotephone = false;
 var playings = false;
-var sound;
+var music;
+var volumes;
+var interval;
 var resultvar;
 var loop = false;
 
@@ -52,6 +54,16 @@ function closepopup(){
     $(".tingle-modal__close")[0].click()
 }
 
+function percentage(song){
+    var percentageplayed = (music.seek()/($('.songduration')[song].innerHTML.split(':')[0] * 60 + ($('.songduration')[song].innerHTML.split(':')[1]*1)))*100;
+    //if (remoteaccess) ws.send('[{"duration"')
+    return percentageplayed;
+}
+
+function percentageselected(){
+    return (music.seek()/(($('#songcontainer > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div[name="selected"] > div > h1.songduration')[0].innerHTML.split(':')[0]*60) + ($('#songcontainer > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div[name="selected"] > div > h1.songduration')[0].innerHTML.split(':')[1]*1))*100);
+}
+
 $.get('./api/getsongs.php', function(result) {
     resultvar = result
 }).then(setTimeout(function(result){
@@ -62,9 +74,9 @@ $.get('./api/getsongs.php', function(result) {
     } else {
         var amountofarticles = result.length;
         for (i = 0; amountofarticles > i; i++) {
-            var music = result[i].file;
+            var musics = result[i].file;
             resultarray.push(
-                "../songs/" + music
+                "../songs/" + musics
             );
         }
         console.log(resultarray);
@@ -103,7 +115,7 @@ $.get('./api/getsongs.php', function(result) {
         /*audiojs.events.ready(function() {
             var as = audiojs.createAll();
         });*/
-        sound = new Howl({
+        music = new Howl({
             src: [resultarray[0]],
             html5: true,
             autoplay: false,
@@ -117,6 +129,13 @@ $.get('./api/getsongs.php', function(result) {
             "name": "play_circle_filled"
         })
         buttons.text("play_circle_filled");
+        var progress = $('<div></div>').attr({
+            "class": "line",
+            "id": "progress"
+        })
+        var progress2 = $('<div></div>').attr({
+            "class": "line2"
+        })
         var repeat = $('<i></i>').attr({
             "class": "material-icons",
             "onclick": "repeat()",
@@ -140,9 +159,12 @@ $.get('./api/getsongs.php', function(result) {
         });
         volume.text("volume_up");
         $('#footer').append(buttons);
+        $('#footer').append(progress);
+        $('#progress').append(progress2);
         $('#footer').append(repeat);
         $('#footer').append(slider);
         $('#footer').append(volume);
+        interval = setInterval(function(){$(".line2")[0].setAttribute("style","width:" + percentage(0) + "%")}, 1000)
     }
 }, 3000));
 
@@ -154,15 +176,19 @@ function selectSong(song) {
             $('.song[name=selected]')[0].setAttribute("style", "");
             $('.song[name=selected]')[0].setAttribute("name", "");
             if(playings == true){
-                sound.pause()
-                sound = undefined;
+                music.pause()
                 playings = false;
+                clearInterval(interval)
+                $(".line2")[0].setAttribute("style","width:0%")
             }
-            sound = new Howl({
+            volumes = music._volume;
+            clearInterval(interval);
+            music = new Howl({
                 src: [resultarray[song]],
                 html5: true,
                 autoplay: true,
                 loop: loop,
+                volume: volumes,
                 onplay: function(){document.title = $(".songname")[song].innerHTML + " | Festplayer"},
                 onpause: function(){document.title = "Festplayer"}
             });
@@ -171,6 +197,7 @@ function selectSong(song) {
             $('.song')[song].setAttribute("style", "filter: invert(1)");
             $('.song')[song].setAttribute("name", "selected");
             $('.song')[song].scrollIntoView();
+            interval = setInterval(function(){$(".line2")[0].setAttribute("style","width:" + percentage(song) + "%")}, 1000)
         } else {
             $('.song[name=selected]')[0].setAttribute("style", "");
             $('.song[name=selected]')[0].setAttribute("name", "");
@@ -200,11 +227,11 @@ function repeat() {
     } else {
         if (document.getElementById("repeat").getAttribute("name") == "norepeat") {
             document.getElementById("repeat").setAttribute("name", "repeat-one");
-            sound.loop(true);
+            music.loop(true);
             loop = true;
         } else if (document.getElementById("repeat").getAttribute("name") == "repeat-one") {
             document.getElementById("repeat").setAttribute("name", "norepeat");
-            sound.loop(false);
+            music.loop(false);
             loop = false;
         }
     }
@@ -226,7 +253,7 @@ function setVolume(svolume) {
         socket.send('[{"onmobile":true,"volume":' + svolume + '}]');
     } else {
         if(Howler.state === "running"){
-            sound.volume(svolume / 100);
+            music.volume(svolume / 100);
         }
     }
 }
@@ -237,7 +264,7 @@ function playPause(){
             document.getElementById("playpause").innerHTML = "play_circle_filled"
             if (!isOpen(socket)) steamrolla("You've been disconnected. Your page will reload now.", true)
             socket.send('[{"onmobile":true,"playing":false}]');   
-            playings = false;   
+            playings = false; 
         } else {
             document.getElementById("playpause").innerHTML = "pause_circle_filled"
             if (!isOpen(socket)) steamrolla("You've been disconnected. Your page will reload now.", true)
@@ -247,12 +274,16 @@ function playPause(){
     } else {
         if(playings == true){
             document.getElementById("playpause").innerHTML = "play_circle_filled"
-            sound.pause();
-            playings = false;   
+            music.pause();
+            playings = false;
+            clearInterval(interval)
+            interval = setInterval(function(){$(".line2")[0].setAttribute("style","width:" + percentageselected() + "%")}, 1000)
         } else {
             document.getElementById("playpause").innerHTML = "pause_circle_filled"
-            sound.play();
+            music.play();
             playings = true;
+            clearInterval(interval)
+            interval = setInterval(function(){$(".line2")[0].setAttribute("style","width:" + percentageselected() + "%")}, 1000)
         }
     }
 }
@@ -295,6 +326,7 @@ function checkCode(code){
                 $("#remotepagemobile").hide();
                 /*$("#audiojs_wrapper0").hide();
                 $("#playpause").show();*/
+                $(".line")[0].setAttribute("style","display:none");
                 $("#mainpage").show();
                 steamrolla("Remote control has been enabled. Click on the remote to disconnect.", false)
             } else if(status == "command_successful"){
@@ -358,9 +390,14 @@ function getCode(){
                 steamrolla("Remote control has been enabled. Click on the remote to disconnect. The buttons on your computer have been disabled, use your phone to control the player instead.", false)
                 setTimeout(closepopup,5000)
                 remoteaccess = true;
+                $('.song[name=selected]')[0].setAttribute("style", "");
+                $('.song[name=selected]')[0].setAttribute("name", "");
+                clearInterval(interval)
+                $('.song')[0].setAttribute("style", "filter: invert(1)");
+                $('.song')[0].setAttribute("name", "selected");
                 $("#mainpage").show();
             } else if(status == "phone_disconnected"){
-                if(sound.playing()){
+                if(music.playing()){
                     playPause();
                 }
                 steamrolla("Your phone disconnected.", true)
@@ -392,7 +429,7 @@ function getCode(){
 
 
 function remotecontrol() {
-    if(sound.playing()){
+    if(music.playing()){
         playPause();
     }
     if (jQuery.browser.mobile && document.getElementById("remote").getAttribute("name") == "remote") {
