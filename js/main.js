@@ -9,6 +9,7 @@ window.onload = function() {
     document.getElementById('remote').addEventListener('click', function(e) {
         remotecontrol();
     });
+    document.getElementById("loading").style.display = "block";
 };
 
 var socket;
@@ -16,6 +17,7 @@ var remote = false;
 var remoteaccess;
 var remotephone = false;
 var playings = false;
+var resultvar;
 
 function isOpen(ws) { return ws.readyState === ws.OPEN }
 
@@ -49,7 +51,9 @@ function closepopup(){
 }
 
 $.get('./api/getsongs.php', function(result) {
-    //document.getElementById("loading").style.display = "block";
+    resultvar = result
+}).then(setTimeout(function(result){
+    result = resultvar;
     if (result == "NIGHT_EMPTY") {
         steamrolla("No songs have been located on this server. Try again.",false)
         console.log("test")
@@ -66,7 +70,7 @@ $.get('./api/getsongs.php', function(result) {
             if (i == 0) {
                 var audio = $('<audio></audio>').attr("src", "../songs" + "/" + result[i].file);
                 $('#footer').append(audio);
-                //document.getElementById("loading").style.display = "none";
+                document.getElementById("loading").style.display = "none";
             }
             var article = $("<div></div>").addClass('song');
             $('#songcontainer').append(article);
@@ -134,7 +138,7 @@ $.get('./api/getsongs.php', function(result) {
         $('#footer').append(slider);
         $('#footer').append(volume);
     }
-});
+}, 3000));
 
 function selectSong(song) {
     if ($(".song")[song].getAttribute("name") == "selected") {
