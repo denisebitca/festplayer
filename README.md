@@ -1,10 +1,9 @@
-# festplayer ![Release](https://img.shields.io/badge/release-v0.2-blue.svg) ![early-dev](https://img.shields.io/badge/in%20very%20early%20development-red.svg) [![License](https://img.shields.io/badge/license-multiple-yellow.svg)](https://github.com/JamesHeinrich/getID3/blob/master/license.txt)
+# festplayer ![Release](https://img.shields.io/badge/release-v~1.0-red.svg) ![early-dev](https://img.shields.io/badge/in%20early%20development-blue.svg) [![License](https://img.shields.io/badge/license-multiple-yellow.svg)](https://github.com/JamesHeinrich/getID3/blob/master/license.txt)
 <img src="https://i.imgur.com/qkT4P1s.png" width="50%" height="50%">
 
 # Warning
-After the next release (v0.2.5) of festplayer, **the master branch will no longer be compatible with previous versions of festplayer.** 
-
-The master branch of festplayer will now be dedicated to the next phase of development, which will aim to add the remote capabilities to the player.
+**The master branch of festplayer is not fit for production.**
+Use some of the releases instead.
 
 ## About
 Festplayer is an open-source web server-localised music player made by [rdb-github](https://github.com/rdb-github) with planned remote use capabilities written with HTML, CSS, JS and PHP. It's not intended for actual day-to-day use, it's a project I'm writing for a future event.
