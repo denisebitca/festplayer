@@ -3,7 +3,8 @@ Festplayer v1 - style.css
 by rdb-github
 */
 html, body {
-	margin: 0 auto
+	margin: 0 auto;
+	scroll-behavior: smooth;
 }
 #content{
 	width: 100%;
@@ -25,6 +26,15 @@ html, body {
 }
 .custom-class-1{
 	font-family: Arial, Helvetica, sans-serif;
+}
+.playerbuttons{
+	align-items: center;
+	justify-content: flex-start;
+	display: flex;
+}
+.noty_body{
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
 }
 #logo{
 	width: 100px;
@@ -48,7 +58,7 @@ html, body {
 	width: calc(100% - 75px)
 }
 .line{
-    width: 300px;
+    width: 50%;
     background: #333333;
 }
 .line2{
@@ -64,6 +74,11 @@ html, body {
 	color: white;
 	font-size: 40px !important;
 	display: block;
+}
+#skipp,#skipn {
+	color: white;
+    font-size: 30px !important;
+    display: block;
 }
 #repeat, #volume{
 	color: #333333
@@ -129,6 +144,11 @@ html, body {
 	justify-content: center;
 	align-items: center;
 	background-color: #3c3c3c
+}
+.ld-ring{
+	color: white !important;
+	display: none;
+	margin-right: 10px;
 }
 #elements>h1,#elementspc>h1{
 	text-align: center;
@@ -294,9 +314,16 @@ html, body {
 		display:none
 	}
 }
-@media only screen and (max-width: 500px){
+@media only screen and (max-width: 580px){
 	.line{
-		width: 150px;
+	width: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    margin: 0 auto;
+	}
+	.line2{
+	border-bottom: 5px solid white;
 	}
 	.songposition{
 		font-size: 20px;
