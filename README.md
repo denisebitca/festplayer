@@ -54,9 +54,9 @@ CREATE TABLE `to_be_connected` (
 *Be aware that the screenshots do not reflect the latest version, as the UI is being constantly changed.*
 
 ### *Mobile interface:*
-![Screenshot 1](https://i.imgur.com/H5AUl0v.png)
+![Screenshot 1](https://i.imgur.com/cOK1Jxi.png)
 ### *Computer interface:*
-![Screenshot 2](https://i.imgur.com/4YH9CnD.png)
+![Screenshot 2](https://i.imgur.com/7hK4nCw.png)
 
 ## Future development plans
 ![Flowchart](https://i.imgur.com/YU0o077.png)
