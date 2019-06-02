@@ -160,6 +160,13 @@ html, body {
 	font-size: 30px;
 	font-weight: bold
 }
+#elements>input{
+	display: block;
+    margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	margin-top:25px;
+}
 #elementspc>h1{
 	display:none
 }
@@ -381,4 +388,3 @@ html, body {
 		transform: scale(0.7)
 	}
 }
-

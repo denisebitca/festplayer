@@ -53,8 +53,8 @@
 			<div id="elementcontainer">
 				<div id="elements">
 					<h1 id="codus3" style="width: 300px">Please insert the code you got from your computer.</h1>
-					<textarea id="codus" maxlength="7" placeholder="ABC123D"></textarea>
-					<a id="codus2" href="javascript:checkCode($('#codus').val())" class="myButton">Connect</a>
+					<textarea id="codus" maxlength="7" placeholder="ABC123D" required=""></textarea>
+					<input type="submit" onclick="checkCode($('#codus').val())" class="myButton" value="Connect" style="width: auto;">
 				</div>
 			</div>
 		</div>

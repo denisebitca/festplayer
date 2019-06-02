@@ -23,7 +23,6 @@ var interval;
 var resultvar;
 var loop = false;
 
-
 function isOpen(ws) { return ws.readyState === ws.OPEN }
 
 function notify(text, type){
@@ -241,6 +240,12 @@ function checkCode(code){
 
     if(code.length != 7){
         notify("Invalid code, please try again.", "error")
+        wongcode = true;
+        return;
+    }
+
+    if (wongcode){
+        return;
     }
 
     socket = new WebSocket('ws://' + location.hostname + ':3210');
@@ -253,14 +258,20 @@ function checkCode(code){
         if(JSON.parse(event.data)[0].hasOwnProperty("status")){
             var status = JSON.parse(event.data)[0].status;
             if(status == "awaiting"){
+                $("#remotepagemobile").hide();
+                $("#elementspc>h1").hide();
+                document.getElementsByClassName("loadingcontainer")[1].style.display = "flex";
+                $("#remotepagecomputer").show();
                 $.get('./api/verifycode.php?code=' + code, function(result) {
                     if(result.validity){
                         console.log("yay")
                     } else {
+                        $("#remotepagecomputer").hide();
+                        $("#remotepagemobile").show();
                         notify("Wrong code, double-check what you wrote and try again.", "error");
                         socket.close();
                         wongcode = true;
-                        throw("Wrong code, abort, abort!")
+                        return;
                     }
                 }).then(function(){
                     if (!isOpen(socket)){
@@ -275,20 +286,17 @@ function checkCode(code){
                     socketsend(9, code);
                 })
                 if (wongcode){
+                    socket.close();
                     return;
                 }
-                /*setInterval(function(){
-                    if (!isOpen(socket)) notifypopup("You've been disconnected. Your page will reload now.", true)
-                },30000)*/
             } else if(status == "pairing"){
-                $("#remotepagemobile").hide();
-                $("#elementspc>h1").hide();
-                document.getElementsByClassName("loadingcontainer")[1].style.display = "flex";
-                $("#remotepagecomputer").show();
+                document.getElementsByClassName("loadingcontainer")[1].querySelector("#loading").setAttribute("class","ld ld-ring ld-spin huge")
             } else if(status == "establishing_connection"){
                 //something
             } else if(status == "successfully_paired_with_computer"){
+                document.querySelector("#navbar").style.backgroundColor = "#a541be";
                 remotephone = true;
+                document.getElementsByClassName("loadingcontainer")[1].querySelector("#loading").setAttribute("class","ld ld-ring ld-cycle huge")
                 document.getElementsByClassName("loadingcontainer")[1].style.display = "none";
                 $("#remotepagecomputer").hide();
                 $("#mainpage").show();
@@ -296,8 +304,8 @@ function checkCode(code){
             } else if(status == "command_successful"){
                 console.log("Command successful")
             } else if (status == "computer_disconnected") {
+                socket.close();
                 notifypopup("Your computer disconnected.", true)
-                return;
             } else if (status == "invalid_code") {
                 notify("Wrong code, double-check what you wrote and try again.", "error")
                 return;
@@ -335,9 +343,6 @@ function getCode(){
                 }).then(function(){
                     socketsend(10, code)
                 })
-                /*setInterval(function(){
-                    if (!isOpen(socket)) notifypopup("You've been disconnected. Your page will reload now.", true)
-                },30000)*/
             } else if(status == "registering"){
                 console.log("Code is being registered");
             } else if(status == "successfully_registered"){
@@ -346,6 +351,7 @@ function getCode(){
                 $("#elementspc>h1").show();
                 document.getElementsByClassName("loadingcontainer")[1].style.display = "none";
             } else if(status == "successfully_paired_with_phone"){
+                document.querySelector("#navbar").style.backgroundColor = "#a541be";
                 $("#elementspc>h1").hide();
                 for(i=0;5>i;i++){
                     $(".material-icons")[i].setAttribute("style","pointer-events:none");
@@ -371,11 +377,10 @@ function getCode(){
                 if(music.playing()){
                     playPause();
                 }
-                notifypopup("Your phone disconnected.", true)
+                socket.close();
                 remoteaccess = false;
-            } else if(status == "pause"){
-                playPause();
-            } else if(status == "play"){
+                notifypopup("Your phone disconnected.", true)
+            } else if(status == "pause" || status == "play"){
                 playPause();
             } else {
                 console.error("Odd error, please check websocket error message: " + status);
@@ -415,37 +420,32 @@ function remotecontrol() {
         getCode();
     } else if (jQuery.browser.mobile && document.getElementById("remote").getAttribute("name") == "clicked") {
         if(remotephone){
-            //do things
             if(!confirm("Are you sure you want to interrupt your current connection?")){
                 return;
             } else {
                 location.reload()
             }
-        }
-        document.getElementById("remote").setAttribute("name", "remote");
-        $("#remotepagemobile").hide();
-        document.getElementsByClassName("loadingcontainer")[1].style.display = "none";
-        $("#mainpage").show();
-        if(remotephone){
-            socket.close();
+        } else {
+            document.getElementById("remote").setAttribute("name", "remote");
+            $("#remotepagemobile").hide();
+            document.getElementsByClassName("loadingcontainer")[1].style.display = "none";
+            $("#mainpage").show();
         }
     } else if (!jQuery.browser.mobile && document.getElementById("remote").getAttribute("name") == "clicked") {
         if(remoteaccess){
-            //do things
             if(!confirm("Are you sure you want to interrupt your current connection?")){
                 return;
             } else {
                 location.reload()
             }
+        } else {
+            document.getElementById("remote").setAttribute("name", "remote");
+            $("#elementspc > h1").hide();
+            $("#remotepagecomputer").hide();
+            document.getElementsByClassName("loadingcontainer")[1].style.display = "none";
+            $("#mainpage").show();
+            socket.close();
         }
-        document.getElementById("remote").setAttribute("name", "remote");
-        $("#elementspc > h1:nth-child(1)").hide();
-        $("#elementspc > h1:nth-child(3)").hide();
-        $("#elementspc > h1:nth-child(4)").hide();
-        $("#remotepagecomputer").hide();
-        document.getElementsByClassName("loadingcontainer")[1].style.display = "none";
-        $("#mainpage").show();
-        socket.close();
     }
 }
 

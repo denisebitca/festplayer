@@ -241,6 +241,72 @@ wss.on('connection', function(ws) {
                     ws.send('[{"status":"invalid_command"}]')
                     return; 
                 }
+            } else if(data[0].hasOwnProperty("playing")){
+                var playing = data[0].playing;
+                if (typeof playing === "boolean"){
+                    var playingcheck = false;
+                    for(var i=0;i<moonbear.length;i++){
+                        if(moonbear[i].computerid == ws.id){
+                            wss.clients.forEach(function each(client){
+                                if(moonbear[i].phoneid == client.id){
+                                    if(playing || !playing){
+                                        client.send('[{"playing":' + playing + '}]')
+                                    } else {
+                                        return;
+                                    }
+                                    playingcheck = true;
+                                }
+                            })
+                        }
+                    }
+                    if(!playingcheck){
+                        ws.send('[{"status":"invalid_query_playingcheck"}]');
+                    }
+                } else {
+                    ws.send('[{"status":"invalid_command"}]')
+                    return; 
+                }              
+            } else if(data[0].hasOwnProperty("repeat")){
+                var repeat = data[0].repeat;
+                if (typeof repeat === "boolean"){
+                    var repeatcheck = false;
+                    for(var i=0;i<moonbear.length;i++){
+                        if(moonbear[i].computerid == ws.id){
+                            wss.clients.forEach(function each(client){
+                                if(moonbear[i].phoneid == client.id){
+                                    if(repeat || !repeat){
+                                        client.send('[{"repeat":' + repeat + '}]')
+                                    } else {
+                                        return;
+                                    }
+                                    repeatcheck = true;
+                                }
+                            })
+                        }
+                    }
+                    if(!repeatcheck){
+                        ws.send('[{"status":"invalid_query_repeatcheck"}]');
+                    } 
+                } else {
+                    ws.send('[{"status":"invalid_command"}]')
+                    return; 
+                }               
+            } else if(data[0].hasOwnProperty("song")){
+                if(isNaN(data[0].song)) return;
+                var songcheck = false;
+                for(var i=0;i<moonbear.length;i++){
+                    if(moonbear[i].computerid == ws.id){
+                        wss.clients.forEach(function each(client){
+                            if(moonbear[i].phoneid == client.id){
+                                client.send('[{"song":"' + data[0].song + '"}]')
+                                songcheck = true;
+                            }
+                        })
+                    }
+                }
+                if(!songcheck){
+                    ws.send('[{"status":"invalid_query_songcheck"}]');
+                }               
             } else {
                 ws.send('[{"status":"invalid_command"}]')
                 return;
@@ -381,7 +447,6 @@ wss.on('connection', function(ws) {
                 wss.clients.forEach(function each(client){
                     if(moonbear[i].computerid == client.id){
                         client.send('[{"status":"phone_disconnected"}]')
-                        client.send('[{"status":"awaiting"}]');
                     }
                 })
                 console.log(moonbear[i].phoneid + " (phone) has disconnected, therefore losing connection with " + moonbear[i].computerid + " (computer)")
@@ -398,7 +463,6 @@ wss.on('connection', function(ws) {
                 wss.clients.forEach(function each(client){
                     if(moonbear[i].phoneid == client.id){
                         client.send('[{"status":"computer_disconnected"}]')
-                        client.send('[{"status":"awaiting"}]');
                     }
                 })
                 console.log(moonbear[i].computerid + " (computer) has disconnected, therefore losing connection with " + moonbear[i].phoneid + " (phone)")
@@ -437,4 +501,3 @@ const interval = setInterval(function ping() {
 server.listen(3210, function() {
   console.log('Listening on http://' + args + ':3210');
 });
-
