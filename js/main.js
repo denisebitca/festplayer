@@ -2,18 +2,17 @@
 Festplayer v1 - main.js
 by rdb-github
 */
-var resultarray = [];
-console.log("Festplayer v1");
 
 window.onload = function() {
     document.getElementById('remote').addEventListener('click', function(e) {
         remotecontrol();
     });
-    document.getElementById("loading").style.display = "block";
 };
 
+console.log("Festplayer v1");
+
+var resultarray = [];
 var socket;
-var remote = false;
 var remotefirst = true;
 var remoteaccess;
 var remotephone = false;
@@ -33,7 +32,13 @@ function notify(text, type){
     n.show();
 }
 
-function steamrolla(modaltext, reload){
+function socketsend(number, value){
+    if (!isOpen(socket)){notifypopup("You've been disconnected. Your page will reload now.", true); return;}
+    var arrays = ['[{"duration":"' + value + '"}]','[{"loading":true}]','[{"loading":false}]','[{"onmobile":true,"song":' + value + '}]','[{"onmobile":true,"repeat":true}]','[{"onmobile":true,"repeat":false}]','[{"onmobile":true,"volume":' + value + '}]','[{"onmobile":true,"playing":false}]','[{"onmobile":true,"playing":true}]','[{"onmobile":true,"remotecode":"' + value + '"}]','[{"remotecode":"' + value + '"}]']
+    socket.send(arrays[number]);
+}
+
+function notifypopup(modaltext, reload){
     function DoThis(){
         if(reload){
             location.reload()
@@ -58,28 +63,24 @@ function steamrolla(modaltext, reload){
     modal.open();
 }
 
-function closepopup(){
-    $(".tingle-modal__close")[0].click()
-}
-
-function percentage(song){
-    var percentageplayed = (music.seek()/($('.songduration')[song].innerHTML.split(':')[0] * 60 + ($('.songduration')[song].innerHTML.split(':')[1]*1)))*100;
-    if (remoteaccess) socket.send('[{"duration":"' + percentageplayed + '"}]')
-    return percentageplayed;
-}
-
-function percentageselected(){
-    var percentageplayed = (music.seek()/(($('#songcontainer > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div[name="selected"] > div > h1.songduration')[0].innerHTML.split(':')[0]*60) + ($('#songcontainer > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div[name="selected"] > div > h1.songduration')[0].innerHTML.split(':')[1]*1))*100);
-    if (remoteaccess) socket.send('[{"duration":"' + percentageplayed + '"}]')
-    return percentageplayed;
-}
-
 function currentSong(){
     for(i=0; $(".song").length > i; i++){
         if($('.song')[i].getAttribute("name") == "selected"){
             return i;
         }
     }
+}
+
+function percentage(/*song*/){
+    /*if(currentSong() == song){*/
+    var percentageplayed = (music.seek()/(($('#songcontainer > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div[name="selected"] > div > h1.songduration')[0].innerHTML.split(':')[0]*60) + ($('#songcontainer > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div[name="selected"] > div > h1.songduration')[0].innerHTML.split(':')[1]*1))*100);
+    if (remoteaccess) socketsend(0, percentageplayed)
+    return percentageplayed;
+    /*} else {
+        var percentageplayed = (music.seek()/($('.songduration')[song].innerHTML.split(':')[0] * 60 + ($('.songduration')[song].innerHTML.split(':')[1]*1)))*100;
+        if (remoteaccess) socket.send('[{"duration":"' + percentageplayed + '"}]')
+        return percentageplayed;
+    }*/
 }
 
 function skipforwards(){
@@ -101,20 +102,19 @@ function skipbackwards(){
 }
 
 function selectSong(song, autoplay, firsttime) {
-    if ($(".song")[song].getAttribute("name") == "selected" && remotefirst) {
+    if (currentSong() == song && remotefirst) {
         playPause();
     } else {
         if(!remotephone){
             if(!firsttime){
+                $(".line2")[0].setAttribute("style","width:0%")
                 $('.song[name=selected]')[0].setAttribute("style", "");
                 $('.song[name=selected]')[0].setAttribute("name", "");
                 if(playings == true){
                     music.pause()
                     playings = false;
                     clearInterval(interval)
-                    $(".line2")[0].setAttribute("style","width:0%")
                 }
-                volumes = music._volume;
                 clearInterval(interval);
                 Howler.unload()
             }
@@ -123,15 +123,15 @@ function selectSong(song, autoplay, firsttime) {
                 html5: true,
                 autoplay: autoplay,
                 loop: loop,
-                volume: volumes,
+                volume: Howler.volume(),
                 onplay: function(){document.title = $(".songname")[song].innerHTML + " | Festplayer"},
                 onpause: function(){document.title = "Festplayer"}
             });
             $("#loading_player").show()
-            if(remoteaccess) socket.send('[{"loading":true}]');
+            if(remoteaccess) socketsend(1)
             music.on('load', function(){
                 $("#loading_player").hide();
-                if(remoteaccess) socket.send('[{"loading":false}]')
+                if(remoteaccess) socketsend(2)
             });
             if(!firsttime) {
                 document.getElementById("playpause").innerHTML = "pause_circle_filled";
@@ -139,10 +139,8 @@ function selectSong(song, autoplay, firsttime) {
             }
             $('.song')[song].setAttribute("style", "filter: invert(1)");
             $('.song')[song].setAttribute("name", "selected");
-            $('.song')[song].scrollIntoView();
-            if(!firsttime) {
-                interval = setInterval(function(){$(".line2")[0].setAttribute("style","width:" + percentage(song) + "%")}, 1000)
-            }
+            if(remoteaccess) $('.song')[song].scrollIntoView();
+            interval = setInterval(function(){$(".line2")[0].setAttribute("style","width:" + percentage(/*song*/) + "%")}, 1000)
         } else {
             $('.song[name=selected]')[0].setAttribute("style", "");
             $('.song[name=selected]')[0].setAttribute("name", "");
@@ -151,8 +149,7 @@ function selectSong(song, autoplay, firsttime) {
             $('.song')[song].setAttribute("style", "filter: invert(1)");
             $('.song')[song].setAttribute("name", "selected");
             playings = true;
-            if (!isOpen(socket)) steamrolla("You've been disconnected. Your page will reload now.", true)
-            socket.send('[{"onmobile":true,"song":' + song + '}]');
+            socketsend(3, song)
             $(".line2")[0].setAttribute("style","width:0%")
             document.getElementById("playpause").innerHTML = "pause_circle_filled";
         } 
@@ -160,23 +157,22 @@ function selectSong(song, autoplay, firsttime) {
 }
 
 function repeat() {
+    var repeatelem = document.getElementById("repeat")
     if(remotephone){
-        if (document.getElementById("repeat").getAttribute("name") == "norepeat") {
-            document.getElementById("repeat").setAttribute("name", "repeat-one");
-            if (!isOpen(socket)) steamrolla("You've been disconnected. Your page will reload now.", true)
-            socket.send('[{"onmobile":true,"repeat":true}]');
-        } else if (document.getElementById("repeat").getAttribute("name") == "repeat-one") {
-            document.getElementById("repeat").setAttribute("name", "norepeat");
-            if (!isOpen(socket)) steamrolla("You've been disconnected. Your page will reload now.", true)
-            socket.send('[{"onmobile":true,"repeat":false}]');
+        if (repeatelem.getAttribute("name") == "norepeat") {
+            repeatelem.setAttribute("name", "repeat-one");
+            socketsend(4)
+        } else if (repeatelem.getAttribute("name") == "repeat-one") {
+            repeatelem.setAttribute("name", "norepeat");
+            socketsend(5);
         }
     } else {
-        if (document.getElementById("repeat").getAttribute("name") == "norepeat") {
-            document.getElementById("repeat").setAttribute("name", "repeat-one");
+        if (repeatelem.getAttribute("name") == "norepeat") {
+            repeatelem.setAttribute("name", "repeat-one");
             music.loop(true);
             loop = true;
-        } else if (document.getElementById("repeat").getAttribute("name") == "repeat-one") {
-            document.getElementById("repeat").setAttribute("name", "norepeat");
+        } else if (repeatelem.getAttribute("name") == "repeat-one") {
+            repeatelem.setAttribute("name", "norepeat");
             music.loop(false);
             loop = false;
         }
@@ -195,12 +191,9 @@ function volume() {
 
 function setVolume(svolume) {
     if(remotephone){
-        if (!isOpen(socket)) steamrolla("You've been disconnected. Your page will reload now.", true)
-        socket.send('[{"onmobile":true,"volume":' + svolume + '}]');
+        socketsend(6, svolume)
     } else {
-        if(Howler.state === "running"){
-            music.volume(svolume / 100);
-        }
+        Howler.volume(svolume / 100);
     }
 }
 
@@ -208,14 +201,12 @@ function playPause(){
     if(remotephone){
         if(playings == true){
             document.getElementById("playpause").innerHTML = "play_circle_filled"
-            if (!isOpen(socket)) steamrolla("You've been disconnected. Your page will reload now.", true)
-            socket.send('[{"onmobile":true,"playing":false}]');   
+            socketsend(7);   
             document.title = "Festplayer";
             playings = false; 
         } else {
             document.getElementById("playpause").innerHTML = "pause_circle_filled"
-            if (!isOpen(socket)) steamrolla("You've been disconnected. Your page will reload now.", true)
-            socket.send('[{"onmobile":true,"playing":true}]'); 
+            socketsend(8); 
             document.title = $('#songcontainer > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div[name="selected"] > div > h1.songname')[0].innerHTML + ' | Festplayer'
             playings = true;
         }
@@ -224,14 +215,14 @@ function playPause(){
             document.getElementById("playpause").innerHTML = "play_circle_filled"
             music.pause();
             playings = false;
-            clearInterval(interval)
-            interval = setInterval(function(){$(".line2")[0].setAttribute("style","width:" + percentageselected() + "%")}, 1000)
+            /*clearInterval(interval)
+            interval = setInterval(function(){$(".line2")[0].setAttribute("style","width:" + percentage(currentSong()) + "%")}, 1000)*/
         } else {
             document.getElementById("playpause").innerHTML = "pause_circle_filled"
             music.play();
             playings = true;
-            clearInterval(interval)
-            interval = setInterval(function(){$(".line2")[0].setAttribute("style","width:" + percentageselected() + "%")}, 1000)
+            /*clearInterval(interval)
+            interval = setInterval(function(){$(".line2")[0].setAttribute("style","width:" + percentage(currentSong()) + "%")}, 1000)*/
         }
     }
 }
@@ -276,36 +267,36 @@ function checkCode(code){
                         if (wongcode){
                             return;
                         }
-                        steamrolla("You've been disconnected. Your page will reload now.", true)
+                        notifypopup("You've been disconnected. Your page will reload now.", true)
                     }
                     if (wongcode){
                         return;
                     }
-                    socket.send('[{"onmobile":true,"remotecode":"' + code + '"}]');
+                    socketsend(9, code);
                 })
                 if (wongcode){
                     return;
                 }
-                setInterval(function(){
-                    if (!isOpen(socket)) steamrolla("You've been disconnected. Your page will reload now.", true)
-                },30000)
+                /*setInterval(function(){
+                    if (!isOpen(socket)) notifypopup("You've been disconnected. Your page will reload now.", true)
+                },30000)*/
             } else if(status == "pairing"){
                 $("#remotepagemobile").hide();
                 $("#elementspc>h1").hide();
-                $("#code").show();
-                $("#code").innerHTML = "Loading..."
+                document.getElementsByClassName("loadingcontainer")[1].style.display = "flex";
                 $("#remotepagecomputer").show();
             } else if(status == "establishing_connection"){
-                $("#code").innerHTML = "Establishing connection..."
+                //something
             } else if(status == "successfully_paired_with_computer"){
                 remotephone = true;
+                document.getElementsByClassName("loadingcontainer")[1].style.display = "none";
                 $("#remotepagecomputer").hide();
                 $("#mainpage").show();
                 notify("Remote control has been enabled. Click on the remote to disconnect.", "success")
             } else if(status == "command_successful"){
                 console.log("Command successful")
             } else if (status == "computer_disconnected") {
-                steamrolla("Your computer disconnected.", true)
+                notifypopup("Your computer disconnected.", true)
                 return;
             } else if (status == "invalid_code") {
                 notify("Wrong code, double-check what you wrote and try again.", "error")
@@ -342,24 +333,20 @@ function getCode(){
                 $.get('./api/remote.php', function(result) {
                     code = JSON.parse(result).code;
                 }).then(function(){
-                    if (!isOpen(socket)) steamrolla("You've been disconnected. Your page will reload now.", true)
-                    socket.send('[{"remotecode":"' + code + '"}]');
+                    socketsend(10, code)
                 })
-                setInterval(function(){
-                    if (!isOpen(socket)) steamrolla("You've been disconnected. Your page will reload now.", true)
-                },30000)
+                /*setInterval(function(){
+                    if (!isOpen(socket)) notifypopup("You've been disconnected. Your page will reload now.", true)
+                },30000)*/
             } else if(status == "registering"){
                 console.log("Code is being registered");
             } else if(status == "successfully_registered"){
                 console.log("Code registered successfully!");
                 document.getElementById("code").innerHTML = code;
-                $("#elementspc > h1:nth-child(1)").show();
-                $("#elementspc > h1:nth-child(3)").show();
-                $("#elementspc > h1:nth-child(4)").show();
+                $("#elementspc>h1").show();
+                document.getElementsByClassName("loadingcontainer")[1].style.display = "none";
             } else if(status == "successfully_paired_with_phone"){
-                $("#elementspc > h1:nth-child(1)").hide();
-                $("#elementspc > h1:nth-child(3)").hide();
-                $("#elementspc > h1:nth-child(4)").hide();
+                $("#elementspc>h1").hide();
                 for(i=0;5>i;i++){
                     $(".material-icons")[i].setAttribute("style","pointer-events:none");
                 }
@@ -367,7 +354,6 @@ function getCode(){
                     $(".song")[i].setAttribute("onclick","");
                 }
                 $("#remotepagecomputer").hide();
-                document.getElementById("code").innerHTML = "Loading...";
                 notify("Remote control has been enabled. Click on the remote to disconnect. The buttons on your computer have been disabled, use your phone to control the player instead.", "success")
                 if(loop){
                     repeat();
@@ -385,7 +371,7 @@ function getCode(){
                 if(music.playing()){
                     playPause();
                 }
-                steamrolla("Your phone disconnected.", true)
+                notifypopup("Your phone disconnected.", true)
                 remoteaccess = false;
             } else if(status == "pause"){
                 playPause();
@@ -424,6 +410,7 @@ function remotecontrol() {
     } else if (!jQuery.browser.mobile && document.getElementById("remote").getAttribute("name") == "remote") {
         $("#mainpage").hide();
         $("#remotepagecomputer").attr("style", "display:flex;");
+        document.getElementsByClassName("loadingcontainer")[1].style.display = "flex";
         document.getElementById("remote").setAttribute("name", "clicked");
         getCode();
     } else if (jQuery.browser.mobile && document.getElementById("remote").getAttribute("name") == "clicked") {
@@ -437,6 +424,7 @@ function remotecontrol() {
         }
         document.getElementById("remote").setAttribute("name", "remote");
         $("#remotepagemobile").hide();
+        document.getElementsByClassName("loadingcontainer")[1].style.display = "none";
         $("#mainpage").show();
         if(remotephone){
             socket.close();
@@ -455,7 +443,7 @@ function remotecontrol() {
         $("#elementspc > h1:nth-child(3)").hide();
         $("#elementspc > h1:nth-child(4)").hide();
         $("#remotepagecomputer").hide();
-        document.getElementById("code").innerHTML = "Loading...";
+        document.getElementsByClassName("loadingcontainer")[1].style.display = "none";
         $("#mainpage").show();
         socket.close();
     }
@@ -479,7 +467,7 @@ $.get('./api/getsongs.php', function(result) {
         console.log(resultarray);
         for (i = 0; amountofarticles > i; i++) {
             if (i == 0) {
-                document.getElementById("loading").style.display = "none";
+                document.getElementsByClassName("loadingcontainer")[0].style.display = "none";
             }
             var article = $("<div></div>").addClass('song');
             $('#songcontainer').append(article);
@@ -508,78 +496,7 @@ $.get('./api/getsongs.php', function(result) {
             $(".song")[i].setAttribute("onclick", "selectSong('" + i + "',true)");
         }
         new SimpleBar($('#songcontainer')[0]);
-        var playerbuttons = $('<div></div>').attr({
-            "class": "playerbuttons"
-        })
-        var skipb = $('<i></i>').attr({
-            "class": "material-icons",
-            "onclick": "skipbackwards()",
-            "id": "skipp",
-            "name": "play_circle_filled"
-        })
-        skipb.text("skip_previous");
-        var buttons = $('<i></i>').attr({
-            "class": "material-icons",
-            "onclick": "playPause()",
-            "id": "playpause",
-            "name": "play_circle_filled"
-        })
-        buttons.text("play_circle_filled");
-        var skipf = $('<i></i>').attr({
-            "class": "material-icons",
-            "onclick": "skipforwards()",
-            "id": "skipn",
-            "name": "play_circle_filled"
-        })
-        skipf.text("skip_next");
-        var loadingplayer = $('<div></div>').attr({
-            "id": "loading_player",
-            "class": "ld ld-ring ld-cycle",
-            "name": "loadingplayer"
-        })
-        var progress = $('<div></div>').attr({
-            "class": "line",
-            "id": "progress"
-        })
-        var progress2 = $('<div></div>').attr({
-            "class": "line2"
-        })
-        var playerbuttons2 = $('<div></div>').attr({
-            "class": "playerbuttons"
-        })
-        var repeat = $('<i></i>').attr({
-            "class": "material-icons",
-            "onclick": "repeat()",
-            "id": "repeat",
-            "name": "norepeat"
-        });
-        repeat.text("repeat_one");
-        var slider = $('<input></input>').attr({
-            "id": "vol-control",
-            "type": "range",
-            "min": "0",
-            "max": "100",
-            "step": "1",
-            "oninput": "setVolume(this.value)"
-        });
-        var volume = $('<i></i>').attr({
-            "class": "material-icons",
-            "onclick": "volume()",
-            "id": "volume",
-            "name": "sliderhide"
-        });
-        volume.text("volume_up");
-        $('#footer').append(playerbuttons);
-        $('.playerbuttons')[0].append(skipb[0]);
-        $('.playerbuttons')[0].append(buttons[0]);
-        $('.playerbuttons')[0].append(skipf[0]);
-        $('.playerbuttons')[0].append(loadingplayer[0]);
-        $('#footer').append(progress);
-        $('#progress').append(progress2);
-        $('#footer').append(playerbuttons2)
-        $('.playerbuttons')[1].append(repeat[0]);
-        $('.playerbuttons')[1].append(slider[0]);
-        $('.playerbuttons')[1].append(volume[0]);
         selectSong(0, false, true)
+        Howler.volume(0.5)
     }
 }, 3000));
