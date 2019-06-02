@@ -70,16 +70,10 @@ function currentSong(){
     }
 }
 
-function percentage(/*song*/){
-    /*if(currentSong() == song){*/
+function percentage(){
     var percentageplayed = (music.seek()/(($('#songcontainer > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div[name="selected"] > div > h1.songduration')[0].innerHTML.split(':')[0]*60) + ($('#songcontainer > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div[name="selected"] > div > h1.songduration')[0].innerHTML.split(':')[1]*1))*100);
     if (remoteaccess) socketsend(0, percentageplayed)
     return percentageplayed;
-    /*} else {
-        var percentageplayed = (music.seek()/($('.songduration')[song].innerHTML.split(':')[0] * 60 + ($('.songduration')[song].innerHTML.split(':')[1]*1)))*100;
-        if (remoteaccess) socket.send('[{"duration":"' + percentageplayed + '"}]')
-        return percentageplayed;
-    }*/
 }
 
 function skipforwards(){
@@ -143,10 +137,10 @@ function selectSong(song, autoplay, firsttime) {
         } else {
             $('.song[name=selected]')[0].setAttribute("style", "");
             $('.song[name=selected]')[0].setAttribute("name", "");
-            document.title = "Festplayer";
-            document.title = resultarray[song].replace("../songs/", "").replace(".mp3", "") + " | Festplayer";
             $('.song')[song].setAttribute("style", "filter: invert(1)");
             $('.song')[song].setAttribute("name", "selected");
+            document.title = "Festplayer";
+            document.title = $('#songcontainer > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div[name="selected"] > div > h1.songname')[0].innerHTML + ' | Festplayer'
             playings = true;
             socketsend(3, song)
             $(".line2")[0].setAttribute("style","width:0%")
@@ -214,14 +208,10 @@ function playPause(){
             document.getElementById("playpause").innerHTML = "play_circle_filled"
             music.pause();
             playings = false;
-            /*clearInterval(interval)
-            interval = setInterval(function(){$(".line2")[0].setAttribute("style","width:" + percentage(currentSong()) + "%")}, 1000)*/
         } else {
             document.getElementById("playpause").innerHTML = "pause_circle_filled"
             music.play();
             playings = true;
-            /*clearInterval(interval)
-            interval = setInterval(function(){$(".line2")[0].setAttribute("style","width:" + percentage(currentSong()) + "%")}, 1000)*/
         }
     }
 }
@@ -262,33 +252,45 @@ function checkCode(code){
                 $("#elementspc>h1").hide();
                 document.getElementsByClassName("loadingcontainer")[1].style.display = "flex";
                 $("#remotepagecomputer").show();
-                $.get('./api/verifycode.php?code=' + code, function(result) {
-                    if(result.validity){
-                        console.log("yay")
-                    } else {
-                        $("#remotepagecomputer").hide();
-                        $("#remotepagemobile").show();
-                        notify("Wrong code, double-check what you wrote and try again.", "error");
-                        socket.close();
-                        wongcode = true;
-                        return;
-                    }
-                }).then(function(){
-                    if (!isOpen(socket)){
-                        if (wongcode){
+                $.ajax({
+                    type: "get",
+                    url: './api/verifycode.php?code=' + code,
+                    success: function(data) {
+                        if(typeof data.validity === "boolean"){
+                            if(!data.validity){
+                                $("#remotepagecomputer").hide();
+                                $("#remotepagemobile").show();
+                                notify("Wrong code, double-check what you wrote and try again.", "error");
+                                socket.close();
+                                wongcode = true;
+                                return;
+                            }
+                        } else {
+                            notify("Invalid response from server, try again later.", "error");
+                            document.getElementsByClassName("loadingcontainer")[1].querySelector("#loading").setAttribute("class","ld ld-ring ld-cycle huge")
+                            document.getElementsByClassName("loadingcontainer")[1].style.display = "none";
+                            $("#remotepagecomputer").hide();
+                            remotecontrol()
+                            socket.close();
+                            wongcode = true;
                             return;
                         }
-                        notifypopup("You've been disconnected. Your page will reload now.", true)
+                    },
+                    error: function() {
+                        notify("Server error, try again later.","error")
                     }
-                    if (wongcode){
+                }).then(function(){
+                    if (wongcode){ 
                         return;
+                    } else {
+                        if (!isOpen(socket)){
+                            notifypopup("You've been disconnected. Your page will reload now.", true);
+                        } else {
+                            socketsend(9, code);
+                        }
                     }
-                    socketsend(9, code);
-                })
-                if (wongcode){
-                    socket.close();
-                    return;
-                }
+                });
+                if (wongcode) return;
             } else if(status == "pairing"){
                 document.getElementsByClassName("loadingcontainer")[1].querySelector("#loading").setAttribute("class","ld ld-ring ld-spin huge")
             } else if(status == "establishing_connection"){
@@ -338,11 +340,24 @@ function getCode(){
         if(JSON.parse(event.data)[0].hasOwnProperty("status")){
             var status = JSON.parse(event.data)[0].status;
             if(status == "awaiting"){
-                $.get('./api/remote.php', function(result) {
-                    code = JSON.parse(result).code;
-                }).then(function(){
-                    socketsend(10, code)
-                })
+                $.ajax({
+                    type: "get",
+                    url: "./api/remote.php",
+                    success: function(data) {
+                        try {
+                            code = data;
+                            console.log(data);
+                            code = JSON.parse(code).code;
+                        } catch(e){
+                            notifypopup("Invalid response from server, please try again later.", true)
+                            return;
+                        }
+                        socketsend(10, code);
+                    },
+                    error: function() {
+                        notify("Server error, try again later.","error")
+                    }
+                });
             } else if(status == "registering"){
                 console.log("Code is being registered");
             } else if(status == "successfully_registered"){
@@ -393,9 +408,7 @@ function getCode(){
                 selectSong(JSON.parse(event.data)[0].song,true)
             } else if(JSON.parse(event.data)[0].hasOwnProperty("repeat")){
                 var repeate = JSON.parse(JSON.parse(event.data)[0].repeat);
-                if(repeate){
-                    repeat()
-                } else if (!repeate) {
+                if(repeate || !repeate){
                     repeat()
                 }
             }
@@ -449,54 +462,60 @@ function remotecontrol() {
     }
 }
 
-$.get('./api/getsongs.php', function(result) {
-    resultvar = result
-}).then(setTimeout(function(result){
-    result = resultvar;
-    if (result == "NIGHT_EMPTY") {
-        notify("No songs have been located on this server. Try again.", "error")
-        console.log("test")
-    } else {
-        var amountofarticles = result.length;
-        for (i = 0; amountofarticles > i; i++) {
-            var musics = result[i].file;
-            resultarray.push(
-                "../songs/" + musics
-            );
-        }
-        console.log(resultarray);
-        for (i = 0; amountofarticles > i; i++) {
-            if (i == 0) {
-                document.getElementsByClassName("loadingcontainer")[0].style.display = "none";
+$.ajax({
+    type: "get",
+    url: "./api/getsongs.php",
+    async: true,
+    success: function(data) {
+            result = data;
+            if (result == "NIGHT_EMPTY") {
+                notify("No songs have been located on this server. Try again.", "error")
+                console.log("test")
+            } else {
+                var amountofarticles = result.length;
+                for (i = 0; amountofarticles > i; i++) {
+                    var musics = result[i].file;
+                    resultarray.push(
+                        "./songs/" + musics
+                    );
+                }
+                console.log(resultarray);
+                for (i = 0; amountofarticles > i; i++) {
+                    if (i == 0) {
+                        document.getElementsByClassName("loadingcontainer")[0].style.display = "none";
+                    }
+                    var article = $("<div></div>").addClass('song');
+                    $('#songcontainer').append(article);
+                    //song position
+                    var articlepos = document.createElement("h1");
+                    articlepos.classList.add("songposition");
+                    var text1 = document.createTextNode(i + 1);
+                    articlepos.appendChild(text1);
+                    $(".song")[i].append(articlepos);
+                    //no
+                    var article1 = $("<div></div>").addClass('songinfo');
+                    article.append(article1);
+                    //song name
+                    var articletitle = document.createElement("h1");
+                    articletitle.classList.add("songname");
+                    var text2 = document.createTextNode(result[i].file.substr(0, result[i].file.length - 4));
+                    articletitle.appendChild(text2);
+                    $(".songinfo")[i].append(articletitle);
+                    //duration
+                    var articleduration = document.createElement("h1");
+                    articleduration.classList.add("songduration");
+                    var text3 = document.createTextNode(result[i].duration);
+                    articleduration.appendChild(text3);
+                    $(".songinfo")[i].append(articleduration);
+                    //other
+                    $(".song")[i].setAttribute("onclick", "selectSong('" + i + "',true)");
+                }
+                new SimpleBar($('#songcontainer')[0]);
+                selectSong(0, false, true)
+                Howler.volume(0.5)
             }
-            var article = $("<div></div>").addClass('song');
-            $('#songcontainer').append(article);
-            //song position
-            var articlepos = document.createElement("h1");
-            articlepos.classList.add("songposition");
-            var text1 = document.createTextNode(i + 1);
-            articlepos.appendChild(text1);
-            $(".song")[i].append(articlepos);
-            //no
-            var article1 = $("<div></div>").addClass('songinfo');
-            article.append(article1);
-            //song name
-            var articletitle = document.createElement("h1");
-            articletitle.classList.add("songname");
-            var text2 = document.createTextNode(result[i].file.substr(0, result[i].file.length - 4));
-            articletitle.appendChild(text2);
-            $(".songinfo")[i].append(articletitle);
-            //duration
-            var articleduration = document.createElement("h1");
-            articleduration.classList.add("songduration");
-            var text3 = document.createTextNode(result[i].duration);
-            articleduration.appendChild(text3);
-            $(".songinfo")[i].append(articleduration);
-            //other
-            $(".song")[i].setAttribute("onclick", "selectSong('" + i + "',true)");
-        }
-        new SimpleBar($('#songcontainer')[0]);
-        selectSong(0, false, true)
-        Howler.volume(0.5)
+    },
+    error: function(error) {
+        notify("Server error, try again later.","error")
     }
-}, 3000));
+});

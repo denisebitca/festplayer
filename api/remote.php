@@ -1,5 +1,8 @@
 <?php
-
+/*
+Festplayer v1 - remote.php
+by rdb-github
+*/
 require_once("credentials.php");
 
 $permitted_chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';

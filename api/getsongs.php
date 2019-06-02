@@ -1,17 +1,17 @@
 <?php
 /*
-Festplayer v0.2.1 - getsongs.php
+Festplayer v1 - getsongs.php
 by rdb-github
 */
 require_once('./getid3/getid3.php');
-$dir = "../../songs"; 
+$dir = "../songs"; 
 $infodir = new SplFileInfo($dir);
 $lastmodif = date('d/m/Y H:i:s', $infodir->getMTime());
 $list = array(); 
 $filename = 'latestresults.json';
 
 function getlist(){
-    $dir = "../../songs";
+    $dir = "../songs";
     $infodir = new SplFileInfo($dir);
     $lastmodif = date('d/m/Y H:i:s', $infodir->getMTime());
     $files = glob($dir . "/*.mp3");

@@ -1,5 +1,8 @@
 <?php
-
+/*
+Festplayer v1 - verifycode.php
+by rdb-github
+*/
 require_once("credentials.php");
 
 $CODE = $_GET["code"];
