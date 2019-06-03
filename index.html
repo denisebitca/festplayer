@@ -35,18 +35,27 @@
 			<div id="footer">
 				<div class="playerbuttons">
 					<i class="material-icons" onclick="skipbackwards()" id="skipp">skip_previous</i>
-					<i class="material-icons" onclick="playPause()" id="playpause">play_circle_filled</i>
+					<i class="material-icons" onclick="repeat()" id="repeat" name="norepeat">repeat_one</i>
+					<i class="material-icons" onclick="playpause()" id="playpause">play_circle_filled</i>
+					<div id="volumecontainer">
+						<div class="speech-bubble" id="speech-bubble" style="display:none">
+						<div class="arrow bottom right"></div>
+						<input id="vol-control" type="range" min="0" max="100" step="1" oninput="setVolume(this.value)" style="display:block">
+					</div>
+					<i class="material-icons" onclick="volume()" id="volume" name="sliderhide">volume_up</i>
+				</div>
+					<input id="vol-control" type="range" min="0" max="100" step="1" oninput="setVolume(this.value)" style="display:none">
 					<i class="material-icons" onclick="skipforwards()" id="skipn">skip_next</i>
 					<div id="loading_player" class="ld ld-ring ld-cycle" name="loadingplayer"></div>
 				</div>
 				<div class="line" id="progress">
 					<div class="line2"></div>
 				</div>
-				<div class="playerbuttons">
+				<!----div class="playerbuttons">
 					<i class="material-icons" onclick="repeat()" id="repeat" name="norepeat">repeat_one</i>
 					<input id="vol-control" type="range" min="0" max="100" step="1" oninput="setVolume(this.value)" style="display:none">
 					<i class="material-icons" onclick="volume()" id="volume" name="sliderhide">volume_up</i>
-				</div>
+				</div--->
 			</div>
 		</div>
 		<div id="remotepagemobile">

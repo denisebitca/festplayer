@@ -7,12 +7,13 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "repository":"https://github.com/rdb-github/festplayer",
-  "license": "GPLv3",
+  "repository": "https://github.com/rdb-github/festplayer",
+  "license": "GPL-3.0-only",
   "dependencies": {
     "express": "^4.17.1",
     "node-static": "^0.7.11",
     "path": "^0.12.7",
+    "request": "^2.34",
     "request-promise": "^4.2.4",
     "uuid": "^3.3.2",
     "ws": "^7.0.0"

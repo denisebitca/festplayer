@@ -23,6 +23,24 @@ var interval;
 var resultvar;
 var loop = false;
 
+function playpause(){
+    if(remotephone){
+        if(playings == true){
+            document.getElementById("playpause").innerHTML = "play_circle_filled";
+            socketsend(7);
+            document.title = "Festplayer";
+            playings = false;
+        } else {
+            document.getElementById("playpause").innerHTML = "pause_circle_filled";
+            socketsend(8);
+            document.title = $('#songcontainer > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div[name="selected"] > div > h1.songname')[0].innerHTML + ' | Festplayer';
+            playings = true;
+        }
+    } else {
+        return music.playing() ? music.pause() : music.play();
+    }
+}
+
 function isOpen(ws) { return ws.readyState === ws.OPEN }
 
 function notify(text, type){
@@ -96,18 +114,14 @@ function skipbackwards(){
 
 function selectSong(song, autoplay, firsttime) {
     if (currentSong() == song && remotefirst) {
-        playPause();
+        playpause();
     } else {
         if(!remotephone){
+            $(".line2")[0].setAttribute("style","width:0%");
             if(!firsttime){
-                $(".line2")[0].setAttribute("style","width:0%")
+                music.stop()
                 $('.song[name=selected]')[0].setAttribute("style", "");
                 $('.song[name=selected]')[0].setAttribute("name", "");
-                if(playings == true){
-                    music.pause()
-                    playings = false;
-                    clearInterval(interval)
-                }
                 clearInterval(interval);
                 Howler.unload()
             }
@@ -117,8 +131,8 @@ function selectSong(song, autoplay, firsttime) {
                 autoplay: autoplay,
                 loop: loop,
                 volume: Howler.volume(),
-                onplay: function(){document.title = $(".songname")[song].innerHTML + " | Festplayer"},
-                onpause: function(){document.title = "Festplayer"}
+                onplay: function(){document.title = $(".songname")[song].innerHTML + " | Festplayer"; document.getElementById("playpause").innerHTML = "pause_circle_filled";interval = setInterval(function(){$(".line2")[0].setAttribute("style","width:" + percentage() + "%")}, 1000);},
+                onpause: function(){document.title = "Festplayer"; document.getElementById("playpause").innerHTML = "play_circle_filled";clearInterval(interval);}
             });
             $("#loading_player").show()
             if(remoteaccess) socketsend(1)
@@ -126,14 +140,9 @@ function selectSong(song, autoplay, firsttime) {
                 $("#loading_player").hide();
                 if(remoteaccess) socketsend(2)
             });
-            if(!firsttime) {
-                document.getElementById("playpause").innerHTML = "pause_circle_filled";
-                playings = true;
-            }
             $('.song')[song].setAttribute("style", "filter: invert(1)");
             $('.song')[song].setAttribute("name", "selected");
             if(remoteaccess) $('.song')[song].scrollIntoView();
-            interval = setInterval(function(){$(".line2")[0].setAttribute("style","width:" + percentage(/*song*/) + "%")}, 1000)
         } else {
             $('.song[name=selected]')[0].setAttribute("style", "");
             $('.song[name=selected]')[0].setAttribute("name", "");
@@ -174,10 +183,10 @@ function repeat() {
 
 function volume() {
     if (document.getElementById("volume").getAttribute("name") == "slidershow") {
-        document.getElementById("vol-control").setAttribute("style", "display:none");
+        document.getElementById("speech-bubble").setAttribute("style", "display:none");
         document.getElementById("volume").setAttribute("name", "sliderhide");
     } else if (document.getElementById("volume").getAttribute("name") == "sliderhide") {
-        document.getElementById("vol-control").setAttribute("style", "display:block");
+        document.getElementById("speech-bubble").setAttribute("style", "display:flex");
         document.getElementById("volume").setAttribute("name", "slidershow");
     }
 }
@@ -187,32 +196,6 @@ function setVolume(svolume) {
         socketsend(6, svolume)
     } else {
         Howler.volume(svolume / 100);
-    }
-}
-
-function playPause(){
-    if(remotephone){
-        if(playings == true){
-            document.getElementById("playpause").innerHTML = "play_circle_filled"
-            socketsend(7);   
-            document.title = "Festplayer";
-            playings = false; 
-        } else {
-            document.getElementById("playpause").innerHTML = "pause_circle_filled"
-            socketsend(8); 
-            document.title = $('#songcontainer > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div[name="selected"] > div > h1.songname')[0].innerHTML + ' | Festplayer'
-            playings = true;
-        }
-    } else {
-        if(playings == true){
-            document.getElementById("playpause").innerHTML = "play_circle_filled"
-            music.pause();
-            playings = false;
-        } else {
-            document.getElementById("playpause").innerHTML = "pause_circle_filled"
-            music.play();
-            playings = true;
-        }
     }
 }
 
@@ -294,8 +277,15 @@ function checkCode(code){
             } else if(status == "pairing"){
                 document.getElementsByClassName("loadingcontainer")[1].querySelector("#loading").setAttribute("class","ld ld-ring ld-spin huge")
             } else if(status == "establishing_connection"){
-                //something
+                document.getElementsByClassName("loadingcontainer")[1].querySelector("#loading").setAttribute("class","ld ld-ring ld-spin-fast huge")
             } else if(status == "successfully_paired_with_computer"){
+                $("#vol-control").val("50");
+                if(loop){
+                    repeat();
+                }
+                if (document.getElementById("volume").getAttribute("name") == "slidershow") {
+                    volume()
+                };
                 document.querySelector("#navbar").style.backgroundColor = "#a541be";
                 remotephone = true;
                 document.getElementsByClassName("loadingcontainer")[1].querySelector("#loading").setAttribute("class","ld ld-ring ld-cycle huge")
@@ -366,6 +356,9 @@ function getCode(){
                 $("#elementspc>h1").show();
                 document.getElementsByClassName("loadingcontainer")[1].style.display = "none";
             } else if(status == "successfully_paired_with_phone"){
+                $("#vol-control").val("50");
+                Howler.volume("0.5");
+
                 document.querySelector("#navbar").style.backgroundColor = "#a541be";
                 $("#elementspc>h1").hide();
                 for(i=0;5>i;i++){
@@ -379,24 +372,30 @@ function getCode(){
                 if(loop){
                     repeat();
                 }
+                if (document.getElementById("volume").getAttribute("name") == "slidershow") {
+                    volume()
+                };
                 remoteaccess = true;
                 $("#mainpage").show();
                 Howler.mute(true);
                 remotefirst = false;
                 selectSong(0, false);
-                playPause();
                 music.seek(0);
+                music.stop();
                 Howler.mute(false);
                 remotefirst = true;
             } else if(status == "phone_disconnected"){
                 if(music.playing()){
-                    playPause();
+                    music.stop();
+                    Howler.unload();
                 }
                 socket.close();
                 remoteaccess = false;
                 notifypopup("Your phone disconnected.", true)
-            } else if(status == "pause" || status == "play"){
-                playPause();
+            } else if(status == "pause"){
+                music.pause()
+            } else if(status == "play"){
+                music.play()
             } else {
                 console.error("Odd error, please check websocket error message: " + status);
                 return;
@@ -418,8 +417,11 @@ function getCode(){
 
 
 function remotecontrol() {
-    if(music.playing()){
-        playPause();
+    if(!remoteaccess || !remotephone){
+        music.pause();
+        $(".line2")[0].setAttribute("style","width:0%");
+        music.stop();
+        Howler.unload();
     }
     if (jQuery.browser.mobile && document.getElementById("remote").getAttribute("name") == "remote") {
         document.getElementById("remote").setAttribute("name", "clicked");
@@ -467,6 +469,7 @@ $.ajax({
     url: "./api/getsongs.php",
     async: true,
     success: function(data) {
+            $('#footer').children().hide();
             result = data;
             if (result == "NIGHT_EMPTY") {
                 notify("No songs have been located on this server. Try again.", "error")
@@ -512,7 +515,10 @@ $.ajax({
                 }
                 new SimpleBar($('#songcontainer')[0]);
                 selectSong(0, false, true)
-                Howler.volume(0.5)
+                Howler.volume(0.5);
+                $("#footer").children().show();
+                $(".playerbuttons").attr("style","display:flex;");
+                $("#loading_player").hide();
             }
     },
     error: function(error) {

@@ -11,6 +11,43 @@ html, body {
 	height: 100%;
 	position: absolute
 }
+#volumecontainer {
+	display:flex;
+	justify-content: center;
+    align-items: center;
+}
+.speech-bubble {
+    background-color:#3b3a3a;
+    border: 1px solid #c8c8c8;
+    border-radius: 5px;
+    width: 110px;
+    text-align: center;
+    padding: 20px;
+	position: absolute;
+	justify-content: center;
+	align-items: center;
+	bottom:60px;
+	z-index:2;
+}
+.speech-bubble .arrow {
+    border-style: solid;
+    position: absolute;
+}
+.bottom:after {
+    border-color: #f8f8f8 transparent transparent transparent;
+    border-style: solid;
+    border-width: 7px 7px 0px 7px;
+    bottom: 1px;
+    content: "";
+    position: absolute;
+    left: -7px;
+}
+.bottom {
+    border-color: #c8c8c8 transparent transparent transparent;
+    border-width: 8px 8px 0px 8px;
+    bottom: -8px;
+}
+
 #navbar {
 	display:flex;
 	width: 100%;
@@ -27,7 +64,7 @@ html, body {
 .playerbuttons{
 	align-items: center;
 	justify-content: flex-start;
-	display: flex;
+	display: none;
 }
 .noty_body{
 	font-family: Arial, Helvetica, sans-serif;
@@ -56,7 +93,8 @@ html, body {
 }
 .line{
     width: 50%;
-    background: #333333;
+	background: #333333;
+	display: none;
 }
 .line2{
 	border-bottom: 3px solid white;
@@ -65,7 +103,13 @@ html, body {
 .material-icons{
 	margin-right: 10px;
 	margin-left: 10px;
-	cursor: pointer
+	cursor: pointer;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none
 }
 #playpause{
 	color: white;
@@ -79,9 +123,6 @@ html, body {
 }
 #repeat, #volume{
 	color: #333333
-}
-#repeat:hover, #volume:hover, #playpause:hover{
-	color: #CCCCCC
 }
 #repeat[name="repeat-one"],#volume[name="slidershow"]{
 	color: #CCCCCC
@@ -102,7 +143,7 @@ html, body {
 	width: 15px;
 	height: 15px;
 	border-radius: 50%;
-	background: #404040;
+	background: #adadad;
 	cursor: pointer;
 }
 
@@ -110,7 +151,7 @@ html, body {
 	width: 15px;
 	height: 15px;
 	border-radius: 50%;
-	background: #404040;
+	background: #adadad;
 	cursor: pointer;
 }
 .loadingcontainer{
