@@ -9,6 +9,7 @@ const WebSocket = require('ws');
 function noop() {}
 
 const args = process.argv[2];
+var argport = process.argv[3];
 
 const uuidv4 = require('uuid/v4');
 const rp = require('request-promise');
@@ -26,8 +27,18 @@ const server = createServer(app);
 const wss = new WebSocket.Server({ server });
 
 if(args === undefined || args === "" || args === null){
-    throw("Correct syntax is: node main.js ip")
+    throw("Correct syntax is: node main.js ip (port)")
 }
+
+if(argport === undefined || argport === "" || argport === null){
+    argport = 80;
+    console.log("The default port (80) for the code verification has been set.")
+    console.log("To set it yourself, add the port after the hostname like this: node main.js hostname/ip port")
+    console.log(" ")
+}
+
+console.log("Current code verification hostname and port is " + args + ':' + argport)
+console.log(" ")
 
 function isBlank(str) {
     return (!str || /^\s*$/.test(str));
@@ -45,7 +56,7 @@ function heartbeat() {
 
 function checkCodeValidity(code){
     var options = {
-        uri: 'http://' + args + '/festplayer/api/verifycode.php',
+        uri: 'http://' + args + ':' + argport + '/festplayer/api/verifycode.php',
         qs: {
             code: code
         },
@@ -68,7 +79,7 @@ function checkCodeValidity(code){
 
 function removeCode(code){
     var options = {
-        uri: 'http://' + args + '/festplayer/api/removecode.php',
+        uri: 'http://' + args + ':' + argport + '/festplayer/api/removecode.php',
         qs: {
             code: code
         },
@@ -499,5 +510,5 @@ const interval = setInterval(function ping() {
   }, 60000);
 
 server.listen(3210, function() {
-  console.log('Listening on http://' + args + ':3210');
+  console.log('Listening on ws://' + args + ':3210');
 });
