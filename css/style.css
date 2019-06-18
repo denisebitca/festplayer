@@ -16,6 +16,20 @@
 html, body {
 	margin: 0 auto;
 	scroll-behavior: smooth;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none
+}
+#code{
+	-webkit-touch-callout: default;
+	-webkit-user-select: text;
+	-khtml-user-select: text;
+	-moz-user-select: text;
+	-ms-user-select: text;
+	user-select: text
 }
 #content{
 	width: 100%;
@@ -114,13 +128,7 @@ html, body {
 .material-icons{
 	margin-right: 10px;
 	margin-left: 10px;
-	cursor: pointer;
-	-webkit-touch-callout: none;
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none
+	cursor: pointer
 }
 #playpause{
 	color: white;
