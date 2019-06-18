@@ -8,7 +8,7 @@ Use the latest release instead.
 
 ## Trying the player before setting it up
 
-Click ![here](https://festplayer.***REMOVED***/) so you can test out the player alongside its remote capabilities. Big thanks to ![repl.co](https://repl.co).
+Click [here](https://festplayer.***REMOVED***/) so you can test out the player alongside its remote capabilities. Big thanks to [repl.co](https://repl.co).
 
 ## About
 Festplayer is an open-source web server-localised music player, that can be controlled remotely, written with HTML, Node.js, CSS, JS and PHP. It's not intended for actual day-to-day use, it's a project I'm writing for a future event.
