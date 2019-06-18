@@ -15,7 +15,7 @@ Festplayer is an open-source web server-localised music player, that can be cont
 
 **Be aware this project (in its entirety) (Festplayer) is under the GPLv3 license.**
 
-**Please be aware the project includes [getid3 v3](https://github.com/JamesHeinrich/getID3), which is under the GPLv3 license.**
+**Please be aware the project includes [getid3 v3](https://github.com/JamesHeinrich/getID3) and [festplayer-websocketserver](https://github.com/rdb-github/festplayer-websocketserver), which are under the GPLv3 license.**
 
 **Please be aware the project also includes [noty](https://github.com/needim/noty), [tingle](https://github.com/robinparisi/tingle), [howler.js](https://github.com/goldfire/howler.js) and [SimpleBar](https://github.com/Grsmto/simplebar), and all these projects are under the [MIT License](https://opensource.org/licenses/MIT).**
 
@@ -26,7 +26,7 @@ Festplayer is an open-source web server-localised music player, that can be cont
 ## Use
 Here are all the steps to get Festplayer running.
 
-> You'll need to install node.js and npm to get the websocket server running in ``./webserver_node``. Then do npm install and node main.js (your domain name/ip)
+> You'll need to install node.js and npm to get the [code verification and pairing websocket server](https://github.com/rdb-github/festplayer-websocketserver) running. Then do npm install and node main.js (your domain name/ip)
 
 > Make sure you have write and read rights inside ``./api/``.
 
