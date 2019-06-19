@@ -236,6 +236,7 @@ function checkCode(code){
 
     socket.onerror = function(error) {
         console.log('WebSocket Error: ' + error);
+        notify("Websocket server error, try again later.","error")
     };
 
     socket.onmessage = function (event) {
@@ -312,6 +313,9 @@ function checkCode(code){
             } else if (status == "invalid_code") {
                 notify("Wrong code, double-check what you wrote and try again.", "error")
                 return;
+            } else if (status == "duplicate_client") {
+                notify("You're being ratelimited.", "error")
+                return;
             } else if (status == "loading"){
                 $("#loading_player").show()
             } else if (status == "loaded"){
@@ -335,6 +339,7 @@ function getCode(){
 
     socket.onerror = function(error) {
       console.log('WebSocket Error: ' + error);
+      notify("Websocket server error, try again later.","error")
     };
 
     socket.onmessage = function (event) {
@@ -407,6 +412,9 @@ function getCode(){
                 music.pause()
             } else if(status == "play"){
                 music.play()
+            } else if (status == "duplicate_client") {
+                notify("You're being ratelimited.", "error")
+                return;
             } else {
                 console.error("Odd error, please check websocket error message: " + status);
                 return;
