@@ -1,0 +1,15 @@
+api/getid3/* linguist-vendored=true
+css/icon.css linguist-vendored=true
+css/materialicons.woff2 linguist-vendored=true
+css/noty.min.css linguist-vendored=true
+css/noty.min.css.map linguist-vendored=true
+css/simplebar.min.css linguist-vendored=true
+css/loading.css linguist-vendored=true
+css/tingle.min.css linguist-vendored=true
+js/noty.min.js linguist-vendored=true
+js/noty.min.js.map linguist-vendored=true
+js/simplebar.min.js linguist-vendored=true
+js/howler.min.js linguist-vendored=true
+js/tingle.min.js linguist-vendored=true
+js/jquery-3.4.1.min.js linguist-vendored=true
+
