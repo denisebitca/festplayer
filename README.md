@@ -1,4 +1,4 @@
-# festplayer ![Release](https://img.shields.io/badge/release-v1.0-red.svg) ![early-dev](https://img.shields.io/badge/in%20early%20development-blue.svg) [![License](https://img.shields.io/badge/license-GPLv3-yellow.svg)](./LICENSE)
+# festplayer [![Release](https://img.shields.io/badge/release-v1.0-red.svg)](https://github.com/rdb-github/festplayer/releases) ![early-dev](https://img.shields.io/badge/in%20early%20development-blue.svg) [![License](https://img.shields.io/badge/license-GPLv3-yellow.svg)](./LICENSE)
 <img src="https://i.imgur.com/qkT4P1s.png" width="50%" height="50%">
 
 # Warning
