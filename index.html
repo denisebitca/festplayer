@@ -24,7 +24,6 @@
 			<!--a href="/"><img id="logo" alt="logo" src="./images/logo.svg"></a-->
 			<h1 id="programname">festplayer</h1>
 			<div id="space"></div>
-			<img name="remote" id="remote" alt="Iniciate remote control" src="./images/remote.svg">
 		</div>
 		<div id="mainpage">
 			<div id="songcontainer">
@@ -56,28 +55,6 @@
 					<input id="vol-control" type="range" min="0" max="100" step="1" oninput="setVolume(this.value)" style="display:none">
 					<i class="material-icons" onclick="volume()" id="volume" name="sliderhide">volume_up</i>
 				</div--->
-			</div>
-		</div>
-		<div id="remotepagemobile">
-			<div id="elementcontainer">
-				<div id="elements">
-					<h1 id="codus3" style="width: 300px">Please insert the code you got from your computer.</h1>
-					<textarea id="codus" maxlength="7" placeholder="ABC123D" required=""></textarea>
-					<input type="submit" onclick="checkCode($('#codus').val())" class="myButton" value="Connect" style="width: auto;">
-				</div>
-			</div>
-		</div>
-		<div id="remotepagecomputer">
-			<div id="elementpccontainer">
-				<div id="elementspc">
-					<div class="loadingcontainer">
-							<div id="loading" class="ld ld-ring ld-cycle huge"></div>
-					</div>
-					<h1 style="width:500px">To control this player remotely, please insert this code on your mobile phone:</h1>
-					<h1 id="code"></h1>
-					<h1 style="font-size:20px"><i>awaiting connection...</i></h1>
-					<h1 style="align-self:center;justify-self:center;width:300px;font-size:20px"><i>click on the remote icon to return to the music player [code will be invalidated]</i></h1>
-				</div>
 			</div>
 		</div>
 	</div>

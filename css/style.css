@@ -107,12 +107,6 @@ html, body {
 	color: white;
 	font-size: 40px
 }
-#remote{
-	min-width: 60px;
-	filter: invert(1);
-	cursor: pointer;
-	align-self: center
-}
 #space{
 	width: calc(100% - 75px)
 }
@@ -198,15 +192,6 @@ html, body {
 }
 ::placeholder, ::-webkit-input-placeholder, :-ms-input-placeholder {
   color: #a3a3a3
-}
-#remotepagemobile,#remotepagecomputer{
-	display: none;
-	width: 100%;
-	height: calc(100% - 75px);
-	position: relative;
-	justify-content: center;
-	align-items: center;
-	background-color: #3c3c3c
 }
 .ld-ring{
 	color: white !important;
@@ -305,9 +290,6 @@ html, body {
 	display: block;
 	border-radius: 25px;
 	overflow-y: auto
-}
-#remotemobile{
-	display:none;
 }
 .song{
 	width: calc(100% - 80px);
