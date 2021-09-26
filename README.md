@@ -9,7 +9,7 @@ Festplayer is an open-source web music player, written with HTML, CSS, JS and PH
 
 **Be aware this project (in its entirety) (Festplayer) is under the GPLv3 license.**
 
-**Please be aware the project includes [getid3 v3](https://github.com/JamesHeinrich/getID3) and festplayer-websocketserver, which are under the GPLv3 license.**
+**Please be aware the project includes [getid3 v3](https://github.com/JamesHeinrich/getID3), which are under the GPLv3 license.**
 
 **Please be aware the project also includes [noty](https://github.com/needim/noty), [tingle](https://github.com/robinparisi/tingle), [howler.js](https://github.com/goldfire/howler.js) and [SimpleBar](https://github.com/Grsmto/simplebar), and all these projects are under the [MIT License](https://opensource.org/licenses/MIT).**
 
