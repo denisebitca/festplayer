@@ -1,4 +1,4 @@
-# festplayer [![Release](https://img.shields.io/badge/release-v0.1-red.svg)](https://github.com/rafaelbitca/festplayer/releases) ![early-dev](https://img.shields.io/badge/in%20early%20development-blue.svg) [![License](https://img.shields.io/badge/license-GPLv3-yellow.svg)](./LICENSE)
+# festplayer [![Release](https://img.shields.io/badge/release-v0.1bis-red.svg)](https://github.com/rafaelbitca/festplayer/releases) ![early-dev](https://img.shields.io/badge/in%20early%20development-blue.svg) [![License](https://img.shields.io/badge/license-GPLv3-yellow.svg)](./LICENSE)
 <img src="https://i.imgur.com/qkT4P1s.png" width="50%" height="50%">
 
 # Warning
@@ -19,8 +19,6 @@ Festplayer is an open-source web music player, written with HTML, CSS, JS and PH
 
 ## Use
 Here are all the steps to get Festplayer running.
-
-> You'll need to install node.js and npm to get the code verification and pairing websocket server (CURRENTLY NOT UPLOADED) running. Then do npm install and node main.js (your domain name/ip)
 
 > Make sure you have write and read rights inside ``./api/``.
 
