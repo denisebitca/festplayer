@@ -14,19 +14,9 @@
    Please check LICENSE or README.md, which are in the main directory of Festplayer, for more information.
 */
 
-window.onload = function() {
-    document.getElementById('remote').addEventListener('click', function(e) {
-        remotecontrol();
-    });
-};
-
-console.log("Festplayer v1");
+console.log("Festplayer v0.1bis");
 
 var resultarray = [];
-var socket;
-var remotefirst = true;
-var remoteaccess;
-var remotephone = false;
 var playings = false;
 var music;
 var volumes;
@@ -35,21 +25,7 @@ var resultvar;
 var loop = false;
 
 function playpause(){
-    if(remotephone){
-        if(playings == true){
-            document.getElementById("playpause").innerHTML = "play_circle_filled";
-            socketsend(7);
-            document.title = "Festplayer";
-            playings = false;
-        } else {
-            document.getElementById("playpause").innerHTML = "pause_circle_filled";
-            socketsend(8);
-            document.title = $('#songcontainer > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div[name="selected"] > div > h1.songname')[0].innerHTML + ' | Festplayer';
-            playings = true;
-        }
-    } else {
-        return music.playing() ? music.pause() : music.play();
-    }
+    return music.playing() ? music.pause() : music.play();
 }
 
 function isOpen(ws) { return ws.readyState === ws.OPEN }
@@ -58,12 +34,6 @@ function notify(text, type){
     var n = new Noty({text: text,type: type});
     n.setTimeout(4500);
     n.show();
-}
-
-function socketsend(number, value){
-    if (!isOpen(socket)){notifypopup("You've been disconnected. Your page will reload now.", true); return;}
-    var arrays = ['[{"duration":"' + value + '"}]','[{"loading":true}]','[{"loading":false}]','[{"onmobile":true,"song":' + value + '}]','[{"onmobile":true,"repeat":true}]','[{"onmobile":true,"repeat":false}]','[{"onmobile":true,"volume":' + value + '}]','[{"onmobile":true,"playing":false}]','[{"onmobile":true,"playing":true}]','[{"onmobile":true,"remotecode":"' + value + '"}]','[{"remotecode":"' + value + '"}]']
-    socket.send(arrays[number]);
 }
 
 function notifypopup(modaltext, reload){
@@ -100,8 +70,7 @@ function currentSong(){
 }
 
 function percentage(){
-    var percentageplayed = (music.seek()/(($('#songcontainer > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div[name="selected"] > div > h1.songduration')[0].innerHTML.split(':')[0]*60) + ($('#songcontainer > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div[name="selected"] > div > h1.songduration')[0].innerHTML.split(':')[1]*1))*100);
-    if (remoteaccess) socketsend(0, percentageplayed)
+     var percentageplayed = (music.seek()/(($('#songcontainer > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div[name="selected"] > div > h1.songduration')[0].innerHTML.split(':')[0]*60) + ($('#songcontainer > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div[name="selected"] > div > h1.songduration')[0].innerHTML.split(':')[1]*1))*100);
     return percentageplayed;
 }
 
@@ -124,10 +93,9 @@ function skipbackwards(){
 }
 
 function selectSong(song, autoplay, firsttime) {
-    if (currentSong() == song && remotefirst) {
+    if (currentSong() == song) {
         playpause();
     } else {
-        if(!remotephone){
             $(".line2")[0].setAttribute("style","width:0%");
             if(!firsttime){
                 music.stop()
@@ -146,50 +114,25 @@ function selectSong(song, autoplay, firsttime) {
                 onpause: function(){document.title = "Festplayer"; document.getElementById("playpause").innerHTML = "play_circle_filled";clearInterval(interval);}
             });
             $("#loading_player").show()
-            if(remoteaccess) socketsend(1)
             music.on('load', function(){
                 $("#loading_player").hide();
-                if(remoteaccess) socketsend(2)
             });
             $('.song')[song].setAttribute("style", "filter: invert(1)");
             $('.song')[song].setAttribute("name", "selected");
-            if(remoteaccess) $('.song')[song].scrollIntoView();
-        } else {
-            $('.song[name=selected]')[0].setAttribute("style", "");
-            $('.song[name=selected]')[0].setAttribute("name", "");
-            $('.song')[song].setAttribute("style", "filter: invert(1)");
-            $('.song')[song].setAttribute("name", "selected");
-            document.title = "Festplayer";
-            document.title = $('#songcontainer > div.simplebar-wrapper > div.simplebar-mask > div > div > div > div[name="selected"] > div > h1.songname')[0].innerHTML + ' | Festplayer'
-            playings = true;
-            socketsend(3, song)
-            $(".line2")[0].setAttribute("style","width:0%")
-            document.getElementById("playpause").innerHTML = "pause_circle_filled";
-        } 
     }
 }
 
 function repeat() {
     var repeatelem = document.getElementById("repeat")
-    if(remotephone){
-        if (repeatelem.getAttribute("name") == "norepeat") {
-            repeatelem.setAttribute("name", "repeat-one");
-            socketsend(4)
-        } else if (repeatelem.getAttribute("name") == "repeat-one") {
-            repeatelem.setAttribute("name", "norepeat");
-            socketsend(5);
-        }
-    } else {
-        if (repeatelem.getAttribute("name") == "norepeat") {
-            repeatelem.setAttribute("name", "repeat-one");
-            music.loop(true);
-            loop = true;
-        } else if (repeatelem.getAttribute("name") == "repeat-one") {
-            repeatelem.setAttribute("name", "norepeat");
-            music.loop(false);
-            loop = false;
-        }
-    }
+	if (repeatelem.getAttribute("name") == "norepeat") {
+		repeatelem.setAttribute("name", "repeat-one");
+		music.loop(true);
+		loop = true;
+	} else if (repeatelem.getAttribute("name") == "repeat-one") {
+		repeatelem.setAttribute("name", "norepeat");
+		music.loop(false);
+		loop = false;
+	}
 }
 
 function volume() {
@@ -203,11 +146,7 @@ function volume() {
 }
 
 function setVolume(svolume) {
-    if(remotephone){
-        socketsend(6, svolume)
-    } else {
-        Howler.volume(svolume / 100);
-    }
+    Howler.volume(svolume / 100);
 }
 
 (function(a) {
@@ -216,271 +155,6 @@ function setVolume(svolume) {
 
 function isBlank(str) {
     return (!str || /^\s*$/.test(str));
-}
-
-function checkCode(code){
-    code = code.replace(/[^A-Za-z0-9]+/gm, "");
-    var wongcode = false;
-
-    if(code.length != 7){
-        notify("Invalid code, please try again.", "error")
-        wongcode = true;
-        return;
-    }
-
-    if (wongcode){
-        return;
-    }
-
-    socket = new WebSocket('ws://' + location.hostname + ':3210');
-
-    socket.onerror = function(error) {
-        console.log('WebSocket Error: ' + error);
-        notify("Websocket server error, try again later.","error")
-    };
-
-    socket.onmessage = function (event) {
-        if(JSON.parse(event.data)[0].hasOwnProperty("status")){
-            var status = JSON.parse(event.data)[0].status;
-            if(status == "awaiting"){
-                $("#remotepagemobile").hide();
-                $("#elementspc>h1").hide();
-                document.getElementsByClassName("loadingcontainer")[1].style.display = "flex";
-                $("#remotepagecomputer").show();
-                $.ajax({
-                    type: "get",
-                    url: './api/verifycode.php?code=' + code,
-                    success: function(data) {
-                        if(typeof data.validity === "boolean"){
-                            if(!data.validity){
-                                $("#remotepagecomputer").hide();
-                                $("#remotepagemobile").show();
-                                notify("Wrong code, double-check what you wrote and try again.", "error");
-                                socket.close();
-                                wongcode = true;
-                                return;
-                            }
-                        } else {
-                            notify("Invalid response from server, try again later.", "error");
-                            document.getElementsByClassName("loadingcontainer")[1].querySelector("#loading").setAttribute("class","ld ld-ring ld-cycle huge")
-                            document.getElementsByClassName("loadingcontainer")[1].style.display = "none";
-                            $("#remotepagecomputer").hide();
-                            remotecontrol()
-                            socket.close();
-                            wongcode = true;
-                            return;
-                        }
-                    },
-                    error: function() {
-                        notify("Server error, try again later.","error")
-                    }
-                }).then(function(){
-                    if (wongcode){ 
-                        return;
-                    } else {
-                        if (!isOpen(socket)){
-                            notifypopup("You've been disconnected. Your page will reload now.", true);
-                        } else {
-                            socketsend(9, code);
-                        }
-                    }
-                });
-                if (wongcode) return;
-            } else if(status == "pairing"){
-                document.getElementsByClassName("loadingcontainer")[1].querySelector("#loading").setAttribute("class","ld ld-ring ld-spin huge")
-            } else if(status == "establishing_connection"){
-                document.getElementsByClassName("loadingcontainer")[1].querySelector("#loading").setAttribute("class","ld ld-ring ld-spin-fast huge")
-            } else if(status == "successfully_paired_with_computer"){
-                $("#vol-control").val("50");
-                if(loop){
-                    repeat();
-                }
-                if (document.getElementById("volume").getAttribute("name") == "slidershow") {
-                    volume()
-                };
-                document.querySelector("#navbar").style.backgroundColor = "#a541be";
-                remotephone = true;
-                document.getElementsByClassName("loadingcontainer")[1].querySelector("#loading").setAttribute("class","ld ld-ring ld-cycle huge")
-                document.getElementsByClassName("loadingcontainer")[1].style.display = "none";
-                $("#remotepagecomputer").hide();
-                $("#mainpage").show();
-                notify("Remote control has been enabled. Click on the remote to disconnect.", "success")
-            } else if(status == "command_successful"){
-                console.log("Command successful")
-            } else if (status == "computer_disconnected") {
-                socket.close();
-                notifypopup("Your computer disconnected.", true)
-            } else if (status == "invalid_code") {
-                notify("Wrong code, double-check what you wrote and try again.", "error")
-                return;
-            } else if (status == "duplicate_client") {
-                notify("You're being ratelimited.", "error")
-                return;
-            } else if (status == "loading"){
-                $("#loading_player").show()
-            } else if (status == "loaded"){
-                $("#loading_player").hide()
-            } else {
-                console.error("Odd error, please check websocket error message: " + status);
-                return;
-            }
-        } else if (JSON.parse(event.data)[0].hasOwnProperty("duration")){
-            var duration = JSON.parse(event.data)[0].duration;
-            clearInterval(interval)
-            $(".line2")[0].setAttribute("style","width:" + duration + "%")
-        }
-    }
-}
-
-
-function getCode(){
-    socket = new WebSocket('ws://' + location.hostname + ':3210');
-    var code;
-
-    socket.onerror = function(error) {
-      console.log('WebSocket Error: ' + error);
-      notify("Websocket server error, try again later.","error")
-    };
-
-    socket.onmessage = function (event) {
-        if(JSON.parse(event.data)[0].hasOwnProperty("status")){
-            var status = JSON.parse(event.data)[0].status;
-            if(status == "awaiting"){
-                $.ajax({
-                    type: "get",
-                    url: "./api/remote.php",
-                    success: function(data) {
-                        try {
-                            code = data;
-                            console.log(data);
-                            code = JSON.parse(code).code;
-                        } catch(e){
-                            notifypopup("Invalid response from server, please try again later.", true)
-                            return;
-                        }
-                        socketsend(10, code);
-                    },
-                    error: function() {
-                        notify("Server error, try again later.","error")
-                    }
-                });
-            } else if(status == "registering"){
-                console.log("Code is being registered");
-            } else if(status == "successfully_registered"){
-                console.log("Code registered successfully!");
-                document.getElementById("code").innerHTML = code;
-                $("#elementspc>h1").show();
-                document.getElementsByClassName("loadingcontainer")[1].style.display = "none";
-            } else if(status == "successfully_paired_with_phone"){
-                $("#vol-control").val("50");
-                Howler.volume("0.5");
-
-                document.querySelector("#navbar").style.backgroundColor = "#a541be";
-                $("#elementspc>h1").hide();
-                for(i=0;5>i;i++){
-                    $(".material-icons")[i].setAttribute("style","pointer-events:none");
-                }
-                for (i = 0; resultarray.length > i; i++) {
-                    $(".song")[i].setAttribute("onclick","");
-                }
-                $("#remotepagecomputer").hide();
-                notify("Remote control has been enabled. Click on the remote to disconnect. The buttons on your computer have been disabled, use your phone to control the player instead.", "success")
-                if(loop){
-                    repeat();
-                }
-                if (document.getElementById("volume").getAttribute("name") == "slidershow") {
-                    volume()
-                };
-                remoteaccess = true;
-                $("#mainpage").show();
-                Howler.mute(true);
-                remotefirst = false;
-                selectSong(0, false);
-                music.seek(0);
-                music.stop();
-                Howler.mute(false);
-                remotefirst = true;
-            } else if(status == "phone_disconnected"){
-                if(music.playing()){
-                    music.stop();
-                    Howler.unload();
-                }
-                socket.close();
-                remoteaccess = false;
-                notifypopup("Your phone disconnected.", true)
-            } else if(status == "pause"){
-                music.pause()
-            } else if(status == "play"){
-                music.play()
-            } else if (status == "duplicate_client") {
-                notify("You're being ratelimited.", "error")
-                return;
-            } else {
-                console.error("Odd error, please check websocket error message: " + status);
-                return;
-            }
-        } else if(remoteaccess){
-            if (JSON.parse(event.data)[0].hasOwnProperty("volume")){
-                setVolume(JSON.parse(event.data)[0].volume);
-            } else if(JSON.parse(event.data)[0].hasOwnProperty("song")){
-                selectSong(JSON.parse(event.data)[0].song,true)
-            } else if(JSON.parse(event.data)[0].hasOwnProperty("repeat")){
-                var repeate = JSON.parse(JSON.parse(event.data)[0].repeat);
-                if(repeate || !repeate){
-                    repeat()
-                }
-            }
-        }
-    }
-}
-
-
-function remotecontrol() {
-    if(!remoteaccess || !remotephone){
-        music.pause();
-        $(".line2")[0].setAttribute("style","width:0%");
-        music.stop();
-        Howler.unload();
-    }
-    if (jQuery.browser.mobile && document.getElementById("remote").getAttribute("name") == "remote") {
-        document.getElementById("remote").setAttribute("name", "clicked");
-        $("#mainpage").hide();
-        $("#remotepagemobile").attr("style", "display:flex;");
-    } else if (!jQuery.browser.mobile && document.getElementById("remote").getAttribute("name") == "remote") {
-        $("#mainpage").hide();
-        $("#remotepagecomputer").attr("style", "display:flex;");
-        document.getElementsByClassName("loadingcontainer")[1].style.display = "flex";
-        document.getElementById("remote").setAttribute("name", "clicked");
-        getCode();
-    } else if (jQuery.browser.mobile && document.getElementById("remote").getAttribute("name") == "clicked") {
-        if(remotephone){
-            if(!confirm("Are you sure you want to interrupt your current connection?")){
-                return;
-            } else {
-                location.reload()
-            }
-        } else {
-            document.getElementById("remote").setAttribute("name", "remote");
-            $("#remotepagemobile").hide();
-            document.getElementsByClassName("loadingcontainer")[1].style.display = "none";
-            $("#mainpage").show();
-        }
-    } else if (!jQuery.browser.mobile && document.getElementById("remote").getAttribute("name") == "clicked") {
-        if(remoteaccess){
-            if(!confirm("Are you sure you want to interrupt your current connection?")){
-                return;
-            } else {
-                location.reload()
-            }
-        } else {
-            document.getElementById("remote").setAttribute("name", "remote");
-            $("#elementspc > h1").hide();
-            $("#remotepagecomputer").hide();
-            document.getElementsByClassName("loadingcontainer")[1].style.display = "none";
-            $("#mainpage").show();
-            socket.close();
-        }
-    }
 }
 
 $.ajax({
@@ -530,7 +204,7 @@ $.ajax({
                     articleduration.appendChild(text3);
                     $(".songinfo")[i].append(articleduration);
                     //other
-                    $(".song")[i].setAttribute("onclick", "selectSong('" + i + "',true)");
+                    $(".song")[i].setAttribute("onclick", "selectSong('" + i + "',true, false)");
                 }
                 new SimpleBar($('#songcontainer')[0]);
                 selectSong(0, false, true)
