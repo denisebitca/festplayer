@@ -1,6 +1,6 @@
 <?php
 /*
-   This file, which includes code (mostly written by Rafael Bitca (https://github.com/rdb-github)), is part of Festplayer (https://github.com/rdb-github/festplayer).
+   This file, which includes code (mostly written by Denise Bitca (https://github.com/denisebitca)), is part of Festplayer (https://github.com/denisebitca/festplayer).
  
     Festplayer is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
